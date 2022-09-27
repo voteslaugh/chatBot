@@ -1,9 +1,18 @@
 package bot;
 
 public class Bot {
-    public void checkCommand(Commands command) {
-        if (command == Commands.START) {
-            System.out.println("Hello, I'm bot!");
-        }
+    private Long answer;
+    private final Generator generator = new Generator();
+
+    public String getQuestion() throws Exception {
+        Pair<Long, String> question = generator.question();
+        answer = question.getFirst();
+        return question.getSecond();
+    }
+    public void setGenerator(long min, long max) throws Exception {
+        generator.questionOptions(min, max, "+");
+    }
+    public boolean checkAnswer(long suspect) {
+        return answer == suspect;
     }
 }
