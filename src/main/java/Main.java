@@ -47,15 +47,37 @@ public class Main {
                         System.out.println("Попробуй еще раз");
                     }
                 }
-                if (Objects.equals(input, "/set")){
-                    //задаем диапаон чисел
-                    System.out.println("Введите диапазон чисел");
-                    System.out.println("Минимальное число: "); //надо проверить что это числа
-                    long min = scanner.nextLong();
-                    System.out.println("Максимальное число: ");
-                    long max = scanner.nextLong();
-                    bot.setGenerator(min, max);
-                    question = bot.getQuestion();
+                long min, max;
+                switch(input) {
+                    case("/set"):
+                        System.out.println("Введите диапазон чисел");
+                        System.out.println("Минимальное число: ");
+                        min = scanner.nextLong();
+                        System.out.println("Максимальное число: ");
+                        max = scanner.nextLong();
+                        bot.setGeneratorMin(min);
+                        bot.setGeneratorMax(max);
+                        question = bot.getQuestion();
+                        break;
+                    case("/setmin"):
+                        System.out.println("Введие минимальное число: ");
+                        min = scanner.nextLong();
+                        bot.setGeneratorMin(min);
+                        question = bot.getQuestion();
+                        break;
+                    case("/setmax"):
+                        System.out.println("Введие максимальное число: ");
+                        max = scanner.nextLong();
+                        bot.setGeneratorMin(max);
+                        question = bot.getQuestion();
+                        break;
+                    case("/setoperation"):
+                        System.out.println("Введие операцию: ");
+                        scanner.nextLine();
+                        String operation = scanner.nextLine();
+                        bot.setGeneratorOperation(operation);
+                        question = bot.getQuestion();
+                        break;
                 }
 
             }

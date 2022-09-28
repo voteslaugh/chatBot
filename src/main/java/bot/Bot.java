@@ -9,8 +9,14 @@ public class Bot {
         answer = question.getFirst();
         return question.getSecond();
     }
-    public void setGenerator(long min, long max) throws Exception {
-        generator.questionOptions(min, max, "+");
+    public void setGeneratorMin(long min) {
+        generator.questionOptionForMin(min);
+    }
+    public void setGeneratorMax(long max) {
+        generator.questionOptionForMax(max);
+    }
+    public void setGeneratorOperation(String operation) throws Exception {
+        generator.questionOptionForOperation(operation);
     }
     public boolean checkAnswer(long suspect) {
         return answer == suspect;

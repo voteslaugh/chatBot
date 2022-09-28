@@ -3,9 +3,14 @@ package bot;
 public class Generator {
     long min=0, max=10;
     String operation="+";
-    public void questionOptions(long min, long max, String operation) throws Exception {
+
+    public void questionOptionForMin(long min) {
         this.min = min;
+    }
+    public void questionOptionForMax(long max) {
         this.max = max;
+    }
+    public void questionOptionForOperation(String operation) throws Exception {
         if(!operation.equals("+") && !operation.equals("-") && !operation.equals("*") && !operation.equals("/"))
             throw new Exception("Not operation spotted");
         else
