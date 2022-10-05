@@ -1,8 +1,9 @@
 package bot;
 
-public class Generator {
-    long min=0, max=10;
-    String operation="+";
+public class TaskGenerator {
+    private Task lastTask = null;
+    private long min=0, max=10;
+    private String operation="+";
 
     public void questionOptionForMin(long min) {
         this.min = min;
@@ -17,11 +18,15 @@ public class Generator {
             this.operation = operation;
     }
 
+    public Task getLastTask() {
+        return lastTask;
+    }
+
     private static long longInRange(long min, long max){
         return (long) (Math.random()*((max-min)+1))+min;
     }
 
-    private long getAnswer(long a, long b) throws Exception {
+    private long getAnswer(long a, long b) { //заглушка
         switch (operation)
         {
             case("+"):
@@ -32,16 +37,19 @@ public class Generator {
                 return a*b;
             case("/"):
                 return a/b;
+            default:
+                return 1;
         }
-        throw new Exception("Not operation spotted");
     }
 
-    public Pair<Long, String> question() throws Exception {
+    public Task getTask()  { // немного переделал
+
         long a = longInRange(min, max);
         long b = longInRange(min, max);
-        long answer = getAnswer(a, b);
-        String string = a+operation+b;
-        return (Pair<Long, String>) new Pair(answer, string);
+        String answer = Long.toString(getAnswer(a, b));
+        String question = a+operation+b+'=';
+        this.lastTask = new Task(question, answer);
+        return lastTask;
     }
 
 }
