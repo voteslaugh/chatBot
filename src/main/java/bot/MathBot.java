@@ -4,36 +4,50 @@ import java.util.Objects;
 
 public class MathBot {
     private BotStatus status = BotStatus.SLEEPING;
-    private TaskGenerator taskGenerator = new TaskGenerator(); // нужно изменить название
+    private final TaskGenerator taskGenerator = new TaskGenerator();
 
+    private BotReply getBotReplay(ChatUpdate chatUpdate, String text) { // Временно
+        BotReply botReply = new BotReply(chatUpdate.getUserId(), chatUpdate.getChatId(), status);
+        Message message = new Message();
+        message.setText(text);
+        botReply.setMessage(message);
+        return  botReply;
+    }
     public BotReply reply(ChatUpdate chatUpdate) {
-        switch (this.status) {
+        // взаимодействие с БД
+        if (Objects.equals(chatUpdate.getText(), "/exit")) {
+            this.status = BotStatus.SLEEPING;
+            return getBotReplay(chatUpdate, "I'm sleeping!\n");
+        }
+        switch (status) { // Временно
             case SLEEPING:
-                if (Objects.equals(chatUpdate.getMessage(), "/start")) {
+                if (Objects.equals(chatUpdate.getText(), "/start")) {
                     this.status = BotStatus.WAITING_COMMAND;
-                    return new BotReply(chatUpdate.getUserId(), "I'm waiting command!\n");
-                }
-                else
-                    return new BotReply(chatUpdate.getUserId(), "I'm sleeping!\n");
-            case WAITING_COMMAND:
-                if (Objects.equals(chatUpdate.getMessage(), "/test_for_one")) {
-                    this.status = BotStatus.TESTING_FOR_ONE;
-                    return new BotReply(chatUpdate.getUserId(), "Answer the question...\n", taskGenerator.getTask());
+                    return getBotReplay(chatUpdate, "I'm waiting command!\n");
                 } else {
-                    return new BotReply(chatUpdate.getUserId(), "Unknown command :(\n");
+                    return getBotReplay(chatUpdate, "I'm sleeping!\n");
+                }
+            case WAITING_COMMAND:
+                if (Objects.equals(chatUpdate.getText(), "/test")) {
+                    this.status = BotStatus.TESTING_FOR_ONE;
+                    BotReply botReply = getBotReplay(chatUpdate, "Answer the question...\n");
+                    botReply.getMessage().setTask(taskGenerator.getTask());
+                    return botReply;
+                } else {
+                    return getBotReplay(chatUpdate, "Unknown command :(\n");
                 }
             case TESTING_FOR_ONE:
-                if (Objects.equals(chatUpdate.getMessage(), taskGenerator.getLastTask().getAnswer())) {
-                    return new BotReply(chatUpdate.getUserId(), "Excellently!\n", taskGenerator.getTask());
+                BotReply botReply;
+                if(Objects.equals(chatUpdate.getText(), taskGenerator.getLastTask().getAnswer())) {
+                    botReply = getBotReplay(chatUpdate, "Excellently!\n");
+                    botReply.getMessage().setTask(taskGenerator.getTask());
                 } else {
-                    return new BotReply(chatUpdate.getUserId(), "Wrong answer. Try again!\n", taskGenerator.getLastTask());
+                    botReply = getBotReplay(chatUpdate, "Wrong answer. Try again!\n");
+                    botReply.getMessage().setTask(taskGenerator.getLastTask());
                 }
+                return botReply;
         }
-        if (Objects.equals(chatUpdate.getMessage(), "Hello")) {
-            return new BotReply(chatUpdate.getUserId(), "Hello, I'm MathBot!\n");
-        } else {
-            return new BotReply(chatUpdate.getUserId(), "error... :(\n");
-        }
+        return null;
     }
     public BotStatus getStatus() {
         return this.status;

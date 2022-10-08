@@ -2,16 +2,23 @@ package bot;
 
 public class ChatUpdate {
     private String userId;
-    private String message;
-    public ChatUpdate(String userId, String message) {
+    private String chatId;
+    private String text;
+    public ChatUpdate(String userId, String chatId) {
         this.userId = userId;
-        this.message = message;
+        this.chatId = chatId;
     }
     public String getUserId() {
-        return this.userId;
+        return userId;
     }
-    public String getMessage() {
-        return this.message;
+    public String getChatId() {
+        return chatId;
+    }
+    public String getText() {
+        return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 }

@@ -7,19 +7,24 @@ public class Console extends Program {
     public void run() {
         while (true) {
             String message = this.scanner.nextLine();
-            BotReply botReply = this.mathBot.reply(new ChatUpdate("default", message));
-            switch (mathBot.getStatus()) {
+            ChatUpdate chatUpdate = new ChatUpdate(null, null);
+            chatUpdate.setText(message);
+            BotReply botReply = this.mathBot.reply(chatUpdate);
+            switch (botReply.getStatus()) {
                 case SLEEPING:
-                    System.out.print(botReply.getMessage());
+                    System.out.print(botReply.getMessage().getText());
                     break;
                 case WAITING_COMMAND:
-                    System.out.print(botReply.getMessage());
+                    System.out.print(botReply.getMessage().getText());
                     break;
                 case TESTING_FOR_ONE:
-                    System.out.print(botReply.getMessage());
-                    System.out.print(botReply.getTask().getQuestion());
+                    System.out.print(botReply.getMessage().getText());
+                    System.out.print(botReply.getMessage().getTask().getQuestion());
                     break;
             }
         }
+    }
+    protected ChatUpdate getChatUpdate() {
+        return null;
     }
 }

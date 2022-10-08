@@ -1,23 +1,34 @@
 package bot;
 
-public class BotReply extends ChatUpdate{
-    private Task task = null;
-    private String warningMessage = null;
+public class BotReply {
+    private String userId;
+    private String chatId;
+    private BotStatus status;
+    private Message message = null;
 
-    public BotReply(String userId, String message) {
-        super(userId, message);
-    }
-    public BotReply(String userId, String message, Task task) {
-        super(userId, message);
-        this.task = task;
-    }
-    public BotReply(String userId, String message, Task task, String warningMessage) {
-        super(userId, message);
-        this.warningMessage = warningMessage;
-        this.task = task;
+    public BotReply(String userId, String chatId, BotStatus status) {
+        this.userId = userId;
+        this.chatId = chatId;
+        this.status = status;
     }
 
-    public Task getTask() {
-        return task;
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public BotStatus getStatus() {
+        return status;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
     }
 }
