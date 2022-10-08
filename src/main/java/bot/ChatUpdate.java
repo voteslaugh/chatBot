@@ -3,7 +3,7 @@ package bot;
 public class ChatUpdate {
     private String userId;
     private String chatId;
-    private String text;
+    private String text = "";
     public ChatUpdate(String userId, String chatId) {
         this.userId = userId;
         this.chatId = chatId;

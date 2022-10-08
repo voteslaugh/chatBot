@@ -3,13 +3,11 @@ package bot;
 public class BotReply {
     private String userId;
     private String chatId;
-    private BotStatus status;
-    private Message message = null;
+    private String text = "";
 
-    public BotReply(String userId, String chatId, BotStatus status) {
+    public BotReply(String userId, String chatId) {
         this.userId = userId;
         this.chatId = chatId;
-        this.status = status;
     }
 
     public String getUserId() {
@@ -20,15 +18,11 @@ public class BotReply {
         return chatId;
     }
 
-    public BotStatus getStatus() {
-        return status;
+    public String getText() {
+        return text;
     }
 
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
     }
 }

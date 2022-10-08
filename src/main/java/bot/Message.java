@@ -3,7 +3,7 @@ package bot;
 public class Message {
     private String text = null;
     private String warning = null;
-    private Task task = null;
+    private String question = null;
 
     public String getText() {
         return text;
@@ -13,12 +13,12 @@ public class Message {
         return warning;
     }
 
-    public Task getTask() {
-        return task;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     public void setText(String text) {

@@ -1,9 +1,9 @@
-import bot.Console;
-import bot.Program;
+import bot.ChatBot;
+import bot.ConsoleChatBot;
 
 public class Main {
     public static void main(String [] args) {
-        Program console = new Console();
+        ChatBot console = new ConsoleChatBot();
         console.run();
     }
 }
