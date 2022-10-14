@@ -1,7 +1,6 @@
 package bot;
 
 public class TaskGenerator {
-    private Task lastTask = null;
     private long min=0, max=10;
     private String operation="+";
 
@@ -16,10 +15,6 @@ public class TaskGenerator {
             throw new Exception("Not operation spotted");
         else
             this.operation = operation;
-    }
-
-    public Task getLastTask() {
-        return lastTask;
     }
 
     private static long longInRange(long min, long max){
@@ -42,14 +37,12 @@ public class TaskGenerator {
         }
     }
 
-    public Task getTask()  { // немного переделал
-
+    public Task getTask()  {
         long a = longInRange(min, max);
         long b = longInRange(min, max);
         String answer = Long.toString(getAnswer(a, b));
         String question = a+operation+b+'=';
-        this.lastTask = new Task(question, answer);
-        return lastTask;
+        return new Task(question, answer);
     }
 
 }
