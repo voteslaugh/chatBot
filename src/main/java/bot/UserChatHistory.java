@@ -1,12 +1,12 @@
 package bot;
 
-public class ChatHistory {
+public class UserChatHistory {
     private BotStatus lastBotStatus;
     private Task lastTask = null;
 
-    ChatHistory() {}
+    UserChatHistory() {}
 
-    public ChatHistory(BotStatus status) {
+    public UserChatHistory(BotStatus status) {
         lastBotStatus = status;
     }
 

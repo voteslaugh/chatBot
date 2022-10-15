@@ -9,14 +9,14 @@ public class MathBot {
     public BotReply reply(ChatUpdate chatUpdate) {
         BotReply botReply = new BotReply(chatUpdate.getUserId(), chatUpdate.getChatId());
 
-        ChatHistory chatHistory = dataBase.getChatHistory(chatUpdate.getUserId());
-        BotStatus status = chatHistory.getLastBotStatus();
+        UserChatHistory userChatHistory = dataBase.getChatHistory(chatUpdate.getUserId());
+        BotStatus status = userChatHistory.getLastBotStatus();
 
         if (Objects.equals(chatUpdate.getText(), "/exit")) {
             status = BotStatus.SLEEPING;
             botReply.setText("I'm sleeping!");
-            chatHistory = dataBase.getChatHistory(chatUpdate.getUserId());
-            chatHistory.setLastBotStatus(status);
+            userChatHistory = dataBase.getChatHistory(chatUpdate.getUserId());
+            userChatHistory.setLastBotStatus(status);
             return botReply;
         }
         switch (status) {
@@ -31,22 +31,22 @@ public class MathBot {
             case WAITING_COMMAND:
                 if (Objects.equals(chatUpdate.getText(), "/test")) {
                     status = BotStatus.TESTING;
-                    chatHistory.setLastTask(taskGenerator.getTask());
-                    botReply.setText("Answer the question...\n" + chatHistory.getLastTask().getQuestion());
+                    userChatHistory.setLastTask(taskGenerator.getTask());
+                    botReply.setText("Answer the question...\n" + userChatHistory.getLastTask().getQuestion());
                 } else {
                     botReply.setText("Unknown command :(");
                 }
                 break;
             case TESTING:
-                if(Objects.equals(chatUpdate.getText(), chatHistory.getLastTask().getAnswer())) {
-                    chatHistory.setLastTask(taskGenerator.getTask());
-                    botReply.setText("Excellently!\n" + chatHistory.getLastTask().getQuestion());
+                if(Objects.equals(chatUpdate.getText(), userChatHistory.getLastTask().getAnswer())) {
+                    userChatHistory.setLastTask(taskGenerator.getTask());
+                    botReply.setText("Excellently!\n" + userChatHistory.getLastTask().getQuestion());
                 } else {
-                    botReply.setText("Wrong answer. Try again!\n" + chatHistory.getLastTask().getQuestion());
+                    botReply.setText("Wrong answer. Try again!\n" + userChatHistory.getLastTask().getQuestion());
                 }
                 break;
         }
-        chatHistory.setLastBotStatus(status);
+        userChatHistory.setLastBotStatus(status);
         return botReply;
     }
 }
