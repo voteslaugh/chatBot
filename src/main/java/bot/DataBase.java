@@ -3,12 +3,12 @@ package bot;
 import java.util.HashMap;
 
 public class DataBase {
-    HashMap<String, UserChatHistory> users = new HashMap<>();
+    HashMap<String, ChatHistory> users = new HashMap<>();
 
-    public UserChatHistory getChatHistory(String userId) {
-        if (!users.containsKey(userId)) {
-            users.put(userId, new UserChatHistory(BotStatus.SLEEPING));
+    public ChatHistory getChatHistory(String chatId) {
+        if (!users.containsKey(chatId)) {
+            users.put(chatId, new ChatHistory(BotStatus.SLEEPING));
         }
-        return users.get(userId);
+        return users.get(chatId);
     }
 }
