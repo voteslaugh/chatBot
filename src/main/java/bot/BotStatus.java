@@ -3,5 +3,6 @@ package bot;
 public enum BotStatus {
     SLEEPING,
     WAITING_COMMAND,
-    TESTING
+    SIMPLE_TESTING,
+    BINARY_TESTING
 }
