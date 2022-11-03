@@ -22,7 +22,7 @@ public class MathBot implements Bot {
             chatHistory = new ChatHistory(new Sleep());
         }
         function = chatHistory.getLastFunction();
-        Status status = function.doFunction(chatUpdate.getText());
+        Status status = function.runFunction(chatUpdate.getText());
         if (status != function.getStatus()) {
             switch (status) {
                 case SLEEPING -> function = new Sleep();

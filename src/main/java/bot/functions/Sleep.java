@@ -3,7 +3,7 @@ package bot.functions;
 public class Sleep extends Function {
 
     @Override
-    public Status doFunction(String messageText) {
+    public Status runFunction(String messageText) {
         return switch (messageText) {
             case "/start" -> Status.WAITING_COMMAND;
             default -> Status.SLEEPING;

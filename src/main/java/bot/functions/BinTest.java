@@ -17,7 +17,7 @@ public class BinTest extends Function {
     }
 
     @Override
-    public Status doFunction(String messageText) {
+    public Status runFunction(String messageText) {
         return switch (messageText) {
             case "/stop" -> Status.WAITING_COMMAND;
             default -> {

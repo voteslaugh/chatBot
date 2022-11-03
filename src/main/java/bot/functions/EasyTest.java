@@ -15,7 +15,7 @@ public class EasyTest extends  Function {
     }
 
     @Override
-    public Status doFunction(String messageText) {
+    public Status runFunction(String messageText) {
         return null;
     }
 

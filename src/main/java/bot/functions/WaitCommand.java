@@ -3,7 +3,7 @@ package bot.functions;
 public class WaitCommand extends Function {
 
     @Override
-    public Status doFunction(String messageText) {
+    public Status runFunction(String messageText) {
         return switch (messageText) {
             case "/sleep" -> Status.SLEEPING;
             case "/bintest" -> Status.BINARY_TESTING;
