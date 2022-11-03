@@ -1,4 +1,4 @@
-package bot;
+package components;
 
 public class TaskGenerator {
     private long min=0, max=10;

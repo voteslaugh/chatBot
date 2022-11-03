@@ -1,14 +1,18 @@
-package bot;
+package services;
+
+import bot.Bot;
+import bot.BotReply;
+import bot.ChatUpdate;
 
 import java.util.Scanner;
 
-public class ConsoleChatBot implements ChatBot {
+public class ConsoleChatBot {
     private final Bot BOT;
     private final Scanner scanner = new Scanner(System.in);
     public ConsoleChatBot(Bot BOT) {
         this.BOT = BOT;
     }
-    @Override
+
     public void run() {
         while(true) {
             String text = this.scanner.nextLine();

@@ -1,4 +1,9 @@
 import bot.*;
+import bot.configs.FunctionConfig;
+import components.DataBase;
+import components.MathBot;
+import components.TaskGenerator;
+import services.TelegramChatBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -6,9 +11,11 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class TelegramMain {
     public static void main(String[] args) {
         String botName = "omjlet_test_bot";
-        String botToken = "5538094972:AAHf2r6xYJR6Y4-zpVkWpQwUH2o44wlnoUc";
+        String botToken = "5538094972:AAF6LbxoUTJTQzTEjjga6NH4tETfatjm1z4";
         DataBase dataBase = new DataBase();
-        Bot mathBot = new MathBot(dataBase);
+        TaskGenerator taskGenerator = new TaskGenerator();
+        FunctionConfig functionConfig = new FunctionConfig(taskGenerator);
+        Bot mathBot = new MathBot(functionConfig, dataBase);
         TelegramChatBot telegramChatBot = new TelegramChatBot(botName, botToken, mathBot);
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

@@ -1,5 +1,8 @@
-package bot;
+package services;
 
+import bot.Bot;
+import bot.BotReply;
+import bot.ChatUpdate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -29,16 +32,15 @@ public class TelegramChatBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasCallbackQuery()) {
-            System.out.println(update.getCallbackQuery());
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            Message message = update.getMessage();
+            String text = message.getText();
+            String userId = message.getFrom().getId().toString();
+            String chatId = message.getChatId().toString();
+            ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
+            chatUpdate.setText(text);
+            sendMessage(BOT.reply(chatUpdate));
         }
-        Message message = update.getMessage();
-        String text = message.getText();
-        String userId = message.getFrom().getId().toString();
-        String chatId = message.getChatId().toString();
-        ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
-        chatUpdate.setText(text);
-        sendMessage(BOT.reply(chatUpdate));
     }
 
     public void sendMessage(BotReply botReply) {

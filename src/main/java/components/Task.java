@@ -1,4 +1,4 @@
-package bot;
+package components;
 
 public class Task {
     private String question;
