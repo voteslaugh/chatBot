@@ -1,15 +1,14 @@
 package components;
 
 import bot.*;
-import bot.configs.FunctionConfig;
-import bot.functions.Sleep;
+import bot.functions.*;
 
 public class MathBot implements Bot {
-    private FunctionConfig functionConfig;
+    private TaskGenerator taskGenerator;
     private DataBase dataBase;
 
-    public MathBot(FunctionConfig functionConfig, DataBase dataBase) {
-        this.functionConfig = functionConfig;
+    public MathBot(TaskGenerator taskGenerator, DataBase dataBase) {
+        this.taskGenerator = taskGenerator;
         this.dataBase = dataBase;
     }
 
@@ -18,11 +17,22 @@ public class MathBot implements Bot {
         String chatId = chatUpdate.getChatId();
         BotReply botReply = new BotReply(chatUpdate.getUserId(), chatUpdate.getChatId());
         ChatHistory chatHistory = dataBase.getChatHistory(chatId);
+        Function function;
         if (chatHistory == null) {
-            chatHistory = new ChatHistory(new Sleep(functionConfig));
+            chatHistory = new ChatHistory(new Sleep());
         }
-        chatHistory.setLastFunction(chatHistory.getLastFunction().doFunction(chatUpdate));
-        botReply.setText(chatHistory.getLastFunction().getFunctionReply().getText());
+        function = chatHistory.getLastFunction();
+        Status status = function.doFunction(chatUpdate.getText());
+        if (status != function.getStatus()) {
+            switch (status) {
+                case SLEEPING -> function = new Sleep();
+                case WAITING_COMMAND -> function = new WaitCommand();
+                case BINARY_TESTING -> function = new BinTest(taskGenerator);
+                case EASY_TESTING -> function = new EasyTest();
+            }
+        }
+        botReply.setText(function.getFunctionReply().getText());
+        chatHistory.setLastFunction(function);
         dataBase.save(chatId, chatHistory);
         return botReply;
     }

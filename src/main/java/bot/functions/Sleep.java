@@ -1,26 +1,26 @@
 package bot.functions;
 
-import bot.ChatUpdate;
-import bot.configs.FunctionConfig;
-
 public class Sleep extends Function {
-    public Sleep(FunctionConfig functionConfig) {
-        super(functionConfig);
-    }
 
     @Override
-    public Function doFunction(ChatUpdate chatUpdate) {
-        switch (chatUpdate.getText()) {
+    public Status doFunction(String messageText) {
+        switch (messageText) {
             case "/start":
-                return new WaitCommand(functionConfig);
+                return Status.WAITING_COMMAND;
             default:
-                return this;
+                return Status.SLEEPING;
         }
     }
 
     @Override
     public FunctionReply getFunctionReply() {
+        FunctionReply functionReply = new FunctionReply();
         functionReply.setText("(￣o￣) zzZZzzZZ");
         return functionReply;
+    }
+
+    @Override
+    public Status getStatus() {
+        return Status.SLEEPING;
     }
 }

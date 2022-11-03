@@ -1,8 +1,6 @@
 package components;
 
-import bot.BotStatus;
 import bot.functions.Function;
-import components.Task;
 
 public class ChatHistory {
     private Function lastFunction;

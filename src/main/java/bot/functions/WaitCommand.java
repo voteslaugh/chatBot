@@ -1,29 +1,29 @@
 package bot.functions;
 
-import bot.ChatUpdate;
-import bot.configs.FunctionConfig;
-
 public class WaitCommand extends Function {
-    public WaitCommand(FunctionConfig functionConfig) {
-        super(functionConfig);
-    }
 
     @Override
-    public Function doFunction(ChatUpdate chatUpdate) {
-        switch (chatUpdate.getText()) {
+    public Status doFunction(String messageText) {
+        switch (messageText) {
             case "/sleep":
-                return new Sleep(functionConfig);
+                return Status.SLEEPING;
             case "/bintest":
-                return new BinTest(functionConfig);
+                return Status.BINARY_TESTING;
             case "/easytest":
             default:
-                return this;
+                return Status.WAITING_COMMAND;
         }
     }
 
     @Override
     public FunctionReply getFunctionReply() {
+        FunctionReply functionReply = new FunctionReply();
         functionReply.setText("I'm waiting command...");
         return functionReply;
+    }
+
+    @Override
+    public Status getStatus() {
+        return Status.WAITING_COMMAND;
     }
 }
