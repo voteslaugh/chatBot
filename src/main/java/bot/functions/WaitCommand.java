@@ -4,15 +4,12 @@ public class WaitCommand extends Function {
 
     @Override
     public Status doFunction(String messageText) {
-        switch (messageText) {
-            case "/sleep":
-                return Status.SLEEPING;
-            case "/bintest":
-                return Status.BINARY_TESTING;
-            case "/easytest":
-            default:
-                return Status.WAITING_COMMAND;
-        }
+        return switch (messageText) {
+            case "/sleep" -> Status.SLEEPING;
+            case "/bintest" -> Status.BINARY_TESTING;
+            case "/easytest" -> Status.WAITING_COMMAND;
+            default -> Status.WAITING_COMMAND;
+        };
     }
 
     @Override

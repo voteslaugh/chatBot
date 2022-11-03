@@ -28,7 +28,7 @@ public class MathBot implements Bot {
                 case SLEEPING -> function = new Sleep();
                 case WAITING_COMMAND -> function = new WaitCommand();
                 case BINARY_TESTING -> function = new BinTest(taskGenerator);
-                case EASY_TESTING -> function = new EasyTest();
+                case EASY_TESTING -> function = new EasyTest(taskGenerator);
             }
         }
         botReply.setText(function.getFunctionReply().getText());

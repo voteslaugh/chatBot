@@ -4,12 +4,10 @@ public class Sleep extends Function {
 
     @Override
     public Status doFunction(String messageText) {
-        switch (messageText) {
-            case "/start":
-                return Status.WAITING_COMMAND;
-            default:
-                return Status.SLEEPING;
-        }
+        return switch (messageText) {
+            case "/start" -> Status.WAITING_COMMAND;
+            default -> Status.SLEEPING;
+        };
     }
 
     @Override
