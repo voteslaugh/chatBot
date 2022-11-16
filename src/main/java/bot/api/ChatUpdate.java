@@ -1,4 +1,4 @@
-package bot;
+package bot.api;
 
 public class ChatUpdate {
     private String userId;

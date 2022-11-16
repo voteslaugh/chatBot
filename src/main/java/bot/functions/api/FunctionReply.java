@@ -1,4 +1,4 @@
-package bot.functions;
+package bot.functions.api;
 
 public class FunctionReply {
     private String text;

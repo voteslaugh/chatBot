@@ -1,39 +1,48 @@
 package components;
 
 import bot.*;
-import bot.functions.*;
+import bot.api.BotReply;
+import bot.api.ChatUpdate;
+import bot.functions.api.FunctionReply;
+import bot.models.ChatHistory;
+import bot.configs.BotConfig;
+import bot.functions.components.*;
+import bot.functions.services.*;
 
 public class MathBot implements Bot {
-    private TaskGenerator taskGenerator;
-    private DataBase dataBase;
+    private BotConfig config;
 
-    public MathBot(TaskGenerator taskGenerator, DataBase dataBase) {
-        this.taskGenerator = taskGenerator;
-        this.dataBase = dataBase;
+    public MathBot(BotConfig config) {
+        this.config = config;
     }
-
+    private FunctionReply process(ChatHistory chatHistory, String text) {
+        CommandHandler commandHandler = config.commandHandler();
+        String nameLastCommand = chatHistory.getNameCommand();
+        Command lastCommand = commandHandler.getCommand(nameLastCommand);
+        Command command = commandHandler.getCommand(text);
+        if (command == null || !(command.canUseWhit(nameLastCommand))) {
+            return lastCommand.getFunction().doFunction(chatHistory, text);
+        } else {
+            chatHistory.setNameCommand(text);
+            return command.getFunction().doFunction(chatHistory, null);
+        }
+        // Могут возникнуть ошибки, если:
+        //      1) lastCommand == null
+        //      2) getFunction() -> null
+    }
     @Override
     public BotReply reply(ChatUpdate chatUpdate) {
         String chatId = chatUpdate.getChatId();
+        String text = chatUpdate.getText();
         BotReply botReply = new BotReply(chatUpdate.getUserId(), chatUpdate.getChatId());
-        ChatHistory chatHistory = dataBase.getChatHistory(chatId);
-        Function function;
+        ChatHistory chatHistory = config.dataBase().getChatHistory(chatId);
         if (chatHistory == null) {
-            chatHistory = new ChatHistory(new Sleep());
+            chatHistory = new ChatHistory();
+            chatHistory.setNameCommand(config.commandHandler().getNameDefaultCommand());
         }
-        function = chatHistory.getLastFunction();
-        Status status = function.runFunction(chatUpdate.getText());
-        if (status != function.getStatus()) {
-            switch (status) {
-                case SLEEPING -> function = new Sleep();
-                case WAITING_COMMAND -> function = new WaitCommand();
-                case BINARY_TESTING -> function = new BinTest(taskGenerator);
-                case EASY_TESTING -> function = new EasyTest(taskGenerator);
-            }
-        }
-        botReply.setText(function.getFunctionReply().getText());
-        chatHistory.setLastFunction(function);
-        dataBase.save(chatId, chatHistory);
+        FunctionReply functionReply = process(chatHistory, text);
+        botReply.setText(functionReply.getText());
+        config.dataBase().save(chatId, chatHistory);
         return botReply;
     }
 }

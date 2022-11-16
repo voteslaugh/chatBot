@@ -1,8 +1,8 @@
 package services;
 
 import bot.Bot;
-import bot.BotReply;
-import bot.ChatUpdate;
+import bot.api.BotReply;
+import bot.api.ChatUpdate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;

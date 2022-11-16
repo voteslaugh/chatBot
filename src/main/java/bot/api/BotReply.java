@@ -1,4 +1,4 @@
-package bot;
+package bot.api;
 
 public class BotReply {
     private String userId;

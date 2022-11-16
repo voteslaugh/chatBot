@@ -1,8 +1,8 @@
 package services;
 
 import bot.Bot;
-import bot.BotReply;
-import bot.ChatUpdate;
+import bot.api.BotReply;
+import bot.api.ChatUpdate;
 
 import java.util.Scanner;
 
