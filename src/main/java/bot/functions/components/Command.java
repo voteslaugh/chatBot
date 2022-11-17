@@ -1,28 +1,33 @@
 package bot.functions.components;
 
 import bot.functions.services.Function;
+import bot.functions.services.FunctionGroup;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Command {
-    private String name;
-    private String [] namesAfterCommands;
+    private String[] names;
+    private FunctionGroup functionGroup;
     private Function function;
 
-    public Command(String name, Function function, String... namesAfterCommands) {
-        this.name = name;
+    public Command(Function function, FunctionGroup functionGroup, String... names) {
         this.function = function;
-        this.namesAfterCommands = namesAfterCommands;
+        this.functionGroup = functionGroup;
+        this.names = names;
+
     }
 
-    public boolean canUseWhit(String name) {
-        return Arrays.asList(this.namesAfterCommands).contains(name);
-    }
-
-    public String getName() {
-        return name;
+    public boolean isCompatible(Command command) {
+        return this.functionGroup.containsFunction(command.function);
     }
 
     public Function getFunction() {
         return function;
+    }
+
+    public String[] getNames() {
+        return names;
     }
 }

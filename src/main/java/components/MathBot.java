@@ -20,7 +20,7 @@ public class MathBot implements Bot {
         String nameLastCommand = chatHistory.getNameCommand();
         Command lastCommand = commandHandler.getCommand(nameLastCommand);
         Command command = commandHandler.getCommand(text);
-        if (command == null || !(command.canUseWhit(nameLastCommand))) {
+        if (command == null || !(command.isCompatible(lastCommand))) {
             return lastCommand.getFunction().doFunction(chatHistory, text);
         } else {
             chatHistory.setNameCommand(text);
@@ -38,7 +38,7 @@ public class MathBot implements Bot {
         ChatHistory chatHistory = config.dataBase().getChatHistory(chatId);
         if (chatHistory == null) {
             chatHistory = new ChatHistory();
-            chatHistory.setNameCommand(config.commandHandler().getNameDefaultCommand());
+            chatHistory.setNameCommand(config.commandHandler().getDefaultNameCommand());
         }
         FunctionReply functionReply = process(chatHistory, text);
         botReply.setText(functionReply.getText());
