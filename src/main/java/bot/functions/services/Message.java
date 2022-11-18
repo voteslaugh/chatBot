@@ -4,7 +4,7 @@ import bot.functions.api.FunctionReply;
 import bot.models.ChatHistory;
 
 public class Message implements Function {
-    String text;
+    private String text;
 
     public Message(String text) {
         this.text = text;
