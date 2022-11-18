@@ -5,6 +5,7 @@ import bot.configs.BotConfig;
 import bot.functions.components.Command;
 import bot.functions.services.*;
 import bot.components.DataBase;
+import components.KeyboardFactory;
 import components.MathBot;
 import bot.functions.components.TaskGenerator;
 import services.TelegramChatBot;
@@ -19,7 +20,7 @@ import java.util.Properties;
 
 public class TelegramMain {
     public static void main(String[] args) throws IOException {
-        File fileProperties = new File("D:\\CODE\\Java\\chatBot\\src\\main\\resources\\bot.properties");
+        File fileProperties = new File("..\\chatBot\\src\\main\\resources\\bot.properties");
         Properties properties = new Properties();
         properties.load(new FileReader(fileProperties));
         String botName = properties.get("bot.name").toString();
@@ -43,8 +44,7 @@ public class TelegramMain {
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(dataBase, textHandler);
         Bot mathBot = new MathBot(botConfig);
-
-        TelegramChatBot telegramChatBot = new TelegramChatBot(botName, botToken, mathBot);
+        TelegramChatBot telegramChatBot = new TelegramChatBot(botName, botToken, mathBot, new KeyboardFactory());
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(telegramChatBot);
