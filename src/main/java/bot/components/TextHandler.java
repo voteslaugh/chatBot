@@ -2,8 +2,11 @@ package bot.components;
 
 import bot.functions.api.FunctionReply;
 import bot.functions.components.Command;
+import bot.functions.models.Button;
 import bot.models.ChatHistory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class TextHandler {
@@ -16,9 +19,9 @@ public class TextHandler {
     public FunctionReply process(ChatHistory chatHistory, String text) {
         String nameLastCommand = chatHistory.getNameCommand();
         Command lastCommand = commandHandler.getCommand(nameLastCommand);
+        FunctionReply functionReply = new FunctionReply();
         if (text.charAt(0) == '/') {
             Command command = commandHandler.getCommand(text);
-            FunctionReply functionReply = new FunctionReply();
             if (command == null) {
                 functionReply.setText("Неизвестная команда :(");
             } else if (!(command.isCompatible(lastCommand))) {
@@ -27,13 +30,28 @@ public class TextHandler {
                 if (command.isChangeContext()) {
                     chatHistory.setNameCommand(text);
                 }
-                return command.getFunction().doFunction(chatHistory, null);
+                if (!Objects.equals(chatHistory.getNameCommand(), commandHandler.getDefaultNameCommand())) {
+                    functionReply = command.getFunction().doFunction(chatHistory, null);
+                } else {
+                    functionReply = lastCommand.getFunction().doFunction(chatHistory, text);
+                }
             }
-            if (!Objects.equals(chatHistory.getNameCommand(), commandHandler.getDefaultNameCommand())) {
-                return functionReply;
+        } else {
+            functionReply = lastCommand.getFunction().doFunction(chatHistory, text);
+        }
+        if (!Objects.equals(chatHistory.getNameCommand(), commandHandler.getDefaultNameCommand())) {
+            List<List<Button>> rowsInline = functionReply.getKeyboard();
+            if (rowsInline == null) {
+                rowsInline = new ArrayList<>();
+                List<Button> rowInline = new ArrayList<>();
+                rowInline.add(new Button("/help"));
+                rowsInline.add(rowInline);
+                functionReply.setKeyboard(rowsInline);
+            } else {
+                rowsInline.get(0).add(new Button("/help"));
             }
         }
-        return lastCommand.getFunction().doFunction(chatHistory, text);
+        return functionReply;
 
         // Могут возникнуть ошибки, если:
         //      1) lastCommand == null

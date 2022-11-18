@@ -26,6 +26,8 @@ public class FunctionReply {
         this.keyboard = keyboard;
     }
 
+
+
     public String getText() {
         return text;
     }

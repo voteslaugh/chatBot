@@ -33,6 +33,9 @@ public class KeyboardFactory {
     public ReplyKeyboard buildKeyboard(List<List<Button>> buttons) {
         if (buttons == null) return null;
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        keyboard.setSelective(true);
+        keyboard.setResizeKeyboard(true);
+        keyboard.setOneTimeKeyboard(false);
         List<KeyboardRow> rowsInline = new ArrayList<>();
         for (List<Button> buttonLines: buttons){
             KeyboardRow rowInline = new KeyboardRow();

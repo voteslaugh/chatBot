@@ -8,6 +8,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class TelegramChatBot extends TelegramLongPollingBot {
@@ -51,7 +53,14 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         outMessage.setChatId(botReply.getChatId());
         outMessage.setText(botReply.getText());
         outMessage.setReplyMarkup(keyboardFactory.buildInLineKeyboard(botReply.getInLineKeyboard()));
-        outMessage.setReplyMarkup(keyboardFactory.buildKeyboard(botReply.getKeyboard()));
+        ReplyKeyboard replyKeyboard = keyboardFactory.buildKeyboard(botReply.getKeyboard());
+        if (replyKeyboard == null) {
+            ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
+            keyboardRemove.setRemoveKeyboard(true);
+            outMessage.setReplyMarkup(keyboardRemove);
+        } else {
+            outMessage.setReplyMarkup(replyKeyboard);
+        }
         try {
             execute(outMessage);
         } catch (TelegramApiException e) {
