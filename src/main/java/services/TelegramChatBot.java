@@ -6,8 +6,10 @@ import bot.api.ChatUpdate;
 import components.KeyboardFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -37,29 +39,43 @@ public class TelegramChatBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        String text = "";
+        String userId = "";
+        String chatId = "";
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            userId = callbackQuery.getFrom().getId().toString();
+            chatId = callbackQuery.getMessage().getChatId().toString();
+            text = callbackQuery.getData();
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
-            String text = message.getText();
-            String userId = message.getFrom().getId().toString();
-            String chatId = message.getChatId().toString();
-            ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
-            chatUpdate.setText(text);
-            sendMessage(BOT.reply(chatUpdate));
+            userId = message.getFrom().getId().toString();
+            chatId = message.getChatId().toString();
+            text = message.getText();
         }
+
+        ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
+        chatUpdate.setText(text);
+        sendMessage(BOT.reply(chatUpdate));
+
     }
 
     public void sendMessage(BotReply botReply) {
         SendMessage outMessage = new SendMessage();
         outMessage.setChatId(botReply.getChatId());
         outMessage.setText(botReply.getText());
-        outMessage.setReplyMarkup(keyboardFactory.buildInLineKeyboard(botReply.getInLineKeyboard()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = keyboardFactory.buildInLineKeyboard(botReply.getInLineKeyboard());
         ReplyKeyboard replyKeyboard = keyboardFactory.buildKeyboard(botReply.getKeyboard());
-        if (replyKeyboard == null) {
-            ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
-            keyboardRemove.setRemoveKeyboard(true);
-            outMessage.setReplyMarkup(keyboardRemove);
+        if (inlineKeyboardMarkup == null) {
+            if (replyKeyboard == null) {
+                ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
+                keyboardRemove.setRemoveKeyboard(true);
+                outMessage.setReplyMarkup(keyboardRemove);
+            } else {
+                outMessage.setReplyMarkup(replyKeyboard);
+            }
         } else {
-            outMessage.setReplyMarkup(replyKeyboard);
+            outMessage.setReplyMarkup(inlineKeyboardMarkup);
         }
         try {
             execute(outMessage);

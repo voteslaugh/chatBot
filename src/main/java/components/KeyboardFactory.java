@@ -3,7 +3,6 @@ package components;
 import bot.functions.models.Button;
 import bot.functions.models.InLineButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardFactory {
-    public ReplyKeyboard buildInLineKeyboard(List<List<InLineButton>> buttons) {
+    public InlineKeyboardMarkup buildInLineKeyboard(List<List<InLineButton>> buttons) {
         if (buttons == null) return null;
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
@@ -30,7 +29,7 @@ public class KeyboardFactory {
         keyboard.setKeyboard(rowsInline);
         return keyboard;
     }
-    public ReplyKeyboard buildKeyboard(List<List<Button>> buttons) {
+    public ReplyKeyboardMarkup buildKeyboard(List<List<Button>> buttons) {
         if (buttons == null) return null;
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         keyboard.setSelective(true);
