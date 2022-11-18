@@ -1,4 +1,6 @@
 import bot.*;
+import bot.components.CommandHandler;
+import bot.components.TextHandler;
 import bot.configs.BotConfig;
 import bot.functions.components.Command;
 import bot.functions.services.*;
@@ -13,7 +15,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class TelegramMain {
@@ -39,8 +40,10 @@ public class TelegramMain {
         commandHandler.addCommand(new Command(bintest, true, new FunctionGroup(waitCommand), "/bintest"));
         commandHandler.addCommand(new Command(help, false, new FunctionGroup(waitCommand, bintest), "/help", "/h"));
 
-        BotConfig botConfig = new BotConfig(dataBase, commandHandler);
+        TextHandler textHandler = new TextHandler(commandHandler);
+        BotConfig botConfig = new BotConfig(dataBase, textHandler);
         Bot mathBot = new MathBot(botConfig);
+
         TelegramChatBot telegramChatBot = new TelegramChatBot(botName, botToken, mathBot);
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

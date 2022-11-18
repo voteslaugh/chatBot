@@ -3,33 +3,19 @@ package components;
 import bot.*;
 import bot.api.BotReply;
 import bot.api.ChatUpdate;
+import bot.components.CommandHandler;
 import bot.functions.api.FunctionReply;
 import bot.models.ChatHistory;
 import bot.configs.BotConfig;
 import bot.functions.components.*;
-import bot.functions.services.*;
+
+import java.util.Objects;
 
 public class MathBot implements Bot {
     private BotConfig config;
 
     public MathBot(BotConfig config) {
         this.config = config;
-    }
-    private FunctionReply process(ChatHistory chatHistory, String text) {
-        CommandHandler commandHandler = config.commandHandler();
-        String nameLastCommand = chatHistory.getNameCommand();
-        Command lastCommand = commandHandler.getCommand(nameLastCommand);
-        Command command = commandHandler.getCommand(text);
-        if (command == null || !(command.isCompatible(lastCommand))) {
-            return lastCommand.getFunction().doFunction(chatHistory, text);
-        } else {
-            if (command.isChangeContext())
-                chatHistory.setNameCommand(text);
-            return command.getFunction().doFunction(chatHistory, null);
-        }
-        // Могут возникнуть ошибки, если:
-        //      1) lastCommand == null
-        //      2) getFunction() -> null
     }
     @Override
     public BotReply reply(ChatUpdate chatUpdate) {
@@ -39,9 +25,9 @@ public class MathBot implements Bot {
         ChatHistory chatHistory = config.dataBase().getChatHistory(chatId);
         if (chatHistory == null) {
             chatHistory = new ChatHistory();
-            chatHistory.setNameCommand(config.commandHandler().getDefaultNameCommand());
+            chatHistory.setNameCommand(config.textHandler().getCommandHandler().getDefaultNameCommand());
         }
-        FunctionReply functionReply = process(chatHistory, text);
+        FunctionReply functionReply = config.textHandler().process(chatHistory, text);
         botReply.setText(functionReply.getText());
         config.dataBase().save(chatId, chatHistory);
         return botReply;

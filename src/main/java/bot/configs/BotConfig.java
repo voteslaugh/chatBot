@@ -1,7 +1,8 @@
 package bot.configs;
 
-import bot.functions.services.CommandHandler;
+import bot.components.CommandHandler;
 import bot.components.DataBase;
+import bot.components.TextHandler;
 
-public record BotConfig(DataBase dataBase, CommandHandler commandHandler) {
+public record BotConfig(DataBase dataBase, TextHandler textHandler) {
 }

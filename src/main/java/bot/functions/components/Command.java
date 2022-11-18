@@ -8,7 +8,7 @@ public class Command {
     private FunctionGroup functionGroup;
     private Function function;
 
-    boolean changeContext;
+    private boolean changeContext;
 
     public Command(Function function, boolean changeContext, FunctionGroup functionGroup, String... names) {
         this.function = function;

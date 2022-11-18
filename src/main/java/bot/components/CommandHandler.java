@@ -1,4 +1,4 @@
-package bot.functions.services;
+package bot.components;
 
 import bot.functions.components.Command;
 import java.util.HashMap;
@@ -9,6 +9,10 @@ public class CommandHandler {
 
     private void updateNavigation(Command command) {
         for (String name : command.getNames()) {
+            if (name.charAt(0) != '/') {
+                name = '/' + name;
+            }
+            name = name.replaceAll("\s", "_");
             navigation.put(name, command);
         }
     }
