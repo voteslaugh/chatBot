@@ -7,7 +7,7 @@ import bot.models.ChatHistory;
 
 import java.util.Objects;
 
-public class BinTest extends Function {
+public class BinTest implements Function {
     private TaskGenerator taskGenerator;
 
     public BinTest(TaskGenerator taskGenerator) {

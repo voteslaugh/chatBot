@@ -12,14 +12,14 @@ public class CommandHandler {
             navigation.put(name, command);
         }
     }
-    public CommandHandler(String defaultNameCommand) {
-        this.defaultNameCommand = defaultNameCommand;
-    }
 
     public String getDefaultNameCommand() {
         return defaultNameCommand;
     }
     public void addCommand(Command command) {
+        if (this.defaultNameCommand == null) {
+            this.defaultNameCommand = command.getNames()[0];
+        }
         updateNavigation(command);
     }
     public Command getCommand(String nameCommand) {

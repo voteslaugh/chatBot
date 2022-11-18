@@ -23,7 +23,8 @@ public class MathBot implements Bot {
         if (command == null || !(command.isCompatible(lastCommand))) {
             return lastCommand.getFunction().doFunction(chatHistory, text);
         } else {
-            chatHistory.setNameCommand(text);
+            if (command.isChangeContext())
+                chatHistory.setNameCommand(text);
             return command.getFunction().doFunction(chatHistory, null);
         }
         // Могут возникнуть ошибки, если:

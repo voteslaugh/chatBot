@@ -4,7 +4,7 @@ import bot.functions.api.FunctionReply;
 import bot.functions.components.TaskGenerator;
 import bot.models.ChatHistory;
 
-public class EasyTest extends Function {
+public class EasyTest implements Function {
     private TaskGenerator taskGenerator;
 
     public EasyTest(TaskGenerator taskGenerator) {

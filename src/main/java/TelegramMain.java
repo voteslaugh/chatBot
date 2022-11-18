@@ -10,23 +10,34 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class TelegramMain {
-    public static void main(String[] args) {
-        String botName = "name";
-        String botToken = "token";
+    public static void main(String[] args) throws IOException {
+        File fileProperties = new File("D:\\CODE\\Java\\chatBot\\src\\main\\resources\\bot.properties");
+        Properties properties = new Properties();
+        properties.load(new FileReader(fileProperties));
+        String botName = properties.get("bot.name").toString();
+        String botToken = properties.get("bot.token").toString();
 
         DataBase dataBase = new DataBase();
         TaskGenerator taskGenerator = new TaskGenerator();
 
-        Function sleep = new Sleep();
-        Function waitCommand = new WaitCommand();
+        Function sleep = new Message(" (-, – )…zzzZZZ");
+        Function help = new Message("Здесь должен быть хелп");
+        Function waitCommand = new Message("Жду команду...");
         Function bintest = new BinTest(taskGenerator);
 
-        CommandHandler commandHandler = new CommandHandler("/sleep");
-        commandHandler.addCommand(new Command(sleep, new FunctionGroup(waitCommand, bintest), "/sleep"));
-        commandHandler.addCommand(new Command(waitCommand, new FunctionGroup(sleep), "/start"));
-        commandHandler.addCommand(new Command(waitCommand, new FunctionGroup(bintest), "/stop"));
-        commandHandler.addCommand(new Command(bintest, new FunctionGroup(waitCommand), "/bintest"));
+        CommandHandler commandHandler = new CommandHandler();
+        commandHandler.addCommand(new Command(sleep, true, new FunctionGroup(waitCommand, bintest), "/sleep"));
+        commandHandler.addCommand(new Command(waitCommand, true, new FunctionGroup(sleep), "/start"));
+        commandHandler.addCommand(new Command(waitCommand, true, new FunctionGroup(bintest), "/stop"));
+        commandHandler.addCommand(new Command(bintest, true, new FunctionGroup(waitCommand), "/bintest"));
+        commandHandler.addCommand(new Command(help, false, new FunctionGroup(waitCommand, bintest), "/help", "/h"));
 
         BotConfig botConfig = new BotConfig(dataBase, commandHandler);
         Bot mathBot = new MathBot(botConfig);

@@ -12,8 +12,11 @@ public class Command {
     private FunctionGroup functionGroup;
     private Function function;
 
-    public Command(Function function, FunctionGroup functionGroup, String... names) {
+    boolean changeContext;
+
+    public Command(Function function, boolean changeContext, FunctionGroup functionGroup, String... names) {
         this.function = function;
+        this.changeContext = changeContext;
         this.functionGroup = functionGroup;
         this.names = names;
 
@@ -29,5 +32,9 @@ public class Command {
 
     public String[] getNames() {
         return names;
+    }
+
+    public boolean isChangeContext() {
+        return changeContext;
     }
 }
