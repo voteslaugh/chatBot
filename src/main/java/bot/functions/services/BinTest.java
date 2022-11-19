@@ -24,7 +24,6 @@ public class BinTest implements Function {
             task = taskGenerator.getAdditionalCode();
             chatHistory.setTask(task);
             functionReply.setText(task.getQuestion());
-            return functionReply;
         }
         else if (messageText.equals("binhelp")){
             functionReply.setText("здесь должна быть теоретическая помощь по доп.коду");

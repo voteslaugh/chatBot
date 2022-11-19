@@ -20,6 +20,7 @@ public class TextHandler {
         String nameLastCommand = chatHistory.getNameCommand();
         Command lastCommand = commandHandler.getCommand(nameLastCommand);
         FunctionReply functionReply = new FunctionReply();
+        boolean lastCommandIsDefault = Objects.equals(nameLastCommand, commandHandler.getDefaultNameCommand());
         if (text.charAt(0) == '/') {
             Command command = commandHandler.getCommand(text);
             if (command == null) {
@@ -29,17 +30,14 @@ public class TextHandler {
             } else {
                 if (command.isChangeContext()) {
                     chatHistory.setNameCommand(text);
+                    lastCommandIsDefault = Objects.equals(text, commandHandler.getDefaultNameCommand());
                 }
-                if (!Objects.equals(chatHistory.getNameCommand(), commandHandler.getDefaultNameCommand())) {
-                    functionReply = command.getFunction().doFunction(chatHistory, null);
-                } else {
-                    functionReply = lastCommand.getFunction().doFunction(chatHistory, text);
-                }
+                functionReply = command.getFunction().doFunction(chatHistory, null);
             }
         } else {
             functionReply = lastCommand.getFunction().doFunction(chatHistory, text);
         }
-        if (!Objects.equals(chatHistory.getNameCommand(), commandHandler.getDefaultNameCommand())) {
+        if (!lastCommandIsDefault) {
             List<List<Button>> rowsInline = functionReply.getKeyboard();
             if (rowsInline == null) {
                 rowsInline = new ArrayList<>();
