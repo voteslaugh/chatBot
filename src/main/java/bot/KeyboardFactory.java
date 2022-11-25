@@ -1,7 +1,7 @@
-package components;
+package bot;
 
-import bot.functions.models.Button;
-import bot.functions.models.InLineButton;
+import bot.functions.Button;
+import bot.functions.InLineButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

@@ -1,6 +1,4 @@
-package bot.functions.components;
-
-import bot.functions.models.Task;
+package bot.functions;
 
 public class TaskGenerator {
     private long min=0, max=10;

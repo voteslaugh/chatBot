@@ -1,4 +1,4 @@
-package bot.functions.models;
+package bot.functions;
 
 public class Task {
     private String question;

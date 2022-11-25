@@ -1,4 +1,4 @@
-package services;
+package bot;
 
 import bot.Bot;
 import bot.api.BotReply;

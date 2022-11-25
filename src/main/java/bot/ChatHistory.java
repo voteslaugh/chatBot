@@ -1,6 +1,6 @@
-package bot.models;
+package bot;
 
-import bot.functions.models.Task;
+import bot.functions.Task;
 
 public class ChatHistory {
     private Task task;

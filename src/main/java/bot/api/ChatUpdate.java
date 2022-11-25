@@ -1,12 +1,18 @@
 package bot.api;
 
+import bot.Message;
+
 public class ChatUpdate {
     private String userId;
     private String chatId;
-    private String text = "";
+    private Message message = new Message();
+
     public ChatUpdate(String userId, String chatId) {
         this.userId = userId;
         this.chatId = chatId;
+    }
+    public void setCallback(String callback) {
+        this.message.setCallback(callback);
     }
     public String getUserId() {
         return userId;
@@ -14,10 +20,11 @@ public class ChatUpdate {
     public String getChatId() {
         return chatId;
     }
-    public String getText() {
-        return text;
-    }
     public void setText(String text) {
-        this.text = text;
+        this.message.setText(text);
+    }
+
+    public Message getMessage() {
+        return message;
     }
 }

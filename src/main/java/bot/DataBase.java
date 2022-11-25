@@ -1,6 +1,4 @@
-package bot.components;
-
-import bot.models.ChatHistory;
+package bot;
 
 import java.util.HashMap;
 

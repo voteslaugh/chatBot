@@ -1,8 +1,8 @@
 package bot.api;
 
-import bot.functions.api.FunctionReply;
-import bot.functions.models.Button;
-import bot.functions.models.InLineButton;
+import bot.functions.FunctionReply;
+import bot.functions.Button;
+import bot.functions.InLineButton;
 
 import java.util.List;
 

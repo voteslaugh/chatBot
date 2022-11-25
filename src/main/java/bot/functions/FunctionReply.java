@@ -1,7 +1,4 @@
-package bot.functions.api;
-
-import bot.functions.models.Button;
-import bot.functions.models.InLineButton;
+package bot.functions;
 
 import java.util.List;
 

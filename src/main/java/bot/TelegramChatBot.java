@@ -1,9 +1,7 @@
-package services;
+package bot;
 
-import bot.Bot;
 import bot.api.BotReply;
 import bot.api.ChatUpdate;
-import components.KeyboardFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -42,22 +40,24 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         String text = "";
         String userId = "";
         String chatId = "";
+        String callBack = null;
+
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             userId = callbackQuery.getFrom().getId().toString();
             chatId = callbackQuery.getMessage().getChatId().toString();
-            text = callbackQuery.getData();
+            callBack = callbackQuery.getData();
+
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             userId = message.getFrom().getId().toString();
             chatId = message.getChatId().toString();
             text = message.getText();
         }
-
         ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
+        chatUpdate.setCallback(callBack);
         chatUpdate.setText(text);
         sendMessage(BOT.reply(chatUpdate));
-
     }
 
     public void sendMessage(BotReply botReply) {
@@ -66,12 +66,9 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         outMessage.setText(botReply.getText());
         InlineKeyboardMarkup inlineKeyboardMarkup = keyboardFactory.buildInLineKeyboard(botReply.getInLineKeyboard());
         ReplyKeyboard replyKeyboard = keyboardFactory.buildKeyboard(botReply.getKeyboard());
+
         if (inlineKeyboardMarkup == null) {
-            if (replyKeyboard == null) {
-                ReplyKeyboardRemove keyboardRemove = new ReplyKeyboardRemove();
-                keyboardRemove.setRemoveKeyboard(true);
-                outMessage.setReplyMarkup(keyboardRemove);
-            } else {
+            if (replyKeyboard != null) {
                 outMessage.setReplyMarkup(replyKeyboard);
             }
         } else {

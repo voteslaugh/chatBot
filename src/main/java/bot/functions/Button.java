@@ -1,3 +1,3 @@
-package bot.functions.models;
+package bot.functions;
 
 public record Button (String name) {}
