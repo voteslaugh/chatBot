@@ -10,7 +10,6 @@ import bot.TelegramChatBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,22 +26,21 @@ public class TelegramMain {
         DataBase dataBase = new DataBase();
         TaskGenerator taskGenerator = new TaskGenerator();
 
-        CommandHandler commandHandler = new CommandHandler();
-        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new BinTest(taskGenerator), true));
-        commandHandler.addCommand(new Command("/eztest", "Задачки на счет", new EasyTest(taskGenerator), true));
-//        commandHandler.addCommand(new Command("/start", null, new Info("""
-//                        Привет, дорогой друг!
-//                Я бот, который поможет тебе тренироваться
-//                   в математических задачах и не только.
-//                Для более подробной информации введи "/help"
-//                """), false));
-        commandHandler.addCommand(new Command("Помощь", null, new Info("""
+        Function help = new Info("""
                 Вот список того, что я умею:
-                1) "/bintest", чтобы порешать
-                    задачи на дополнительный код
-                2) "/eztest", чтобы решать
-                    простые задачи на счёт
-                """), false,true));
+                "/bintest" - задачи на дополнительный код
+                "/simpletest" - простые задачи на счёт
+                """);
+        CommandHandler commandHandler = new CommandHandler();
+        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN), true));
+        commandHandler.addCommand(new Command("/simpletest", "Задачки на счет", new Test(taskGenerator, TestMode.SIMPLE), true));
+        commandHandler.addCommand(new Command("/start", "Приветствие", new Info("""
+                Привет, дорогой друг!
+                Я бот, который поможет тебе тренироваться в математических задачах и не только.
+                Для более подробной информации введи "/help"
+                """), true));
+        commandHandler.addCommand(new Command("Помощь", null, help , false,true));
+        commandHandler.addCommand(new Command("/help", null, help , false));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(dataBase, textHandler);

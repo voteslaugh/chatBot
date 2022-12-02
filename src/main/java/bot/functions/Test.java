@@ -7,13 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class BinTest implements Function {
+public class Test implements Function {
     private TaskGenerator taskGenerator;
+    private TestMode mode;
 
-    public BinTest(TaskGenerator taskGenerator) {
+    public Test(TaskGenerator taskGenerator, TestMode mode) {
         this.taskGenerator = taskGenerator;
+        this.mode = mode;
     }
-
+    private Task getTask() {
+        if (mode == TestMode.BIN)
+            return taskGenerator.getAdditionalCode();
+        else
+            return taskGenerator.getSimpleTask();
+    }
     private Data processCallback(ChatHistory chatHistory, String callback) {
         Data data = new Data();
         data.setText(switch (callback) {
@@ -27,7 +34,7 @@ public class BinTest implements Function {
                     """;
             case "giveup" -> {
                 String answer = chatHistory.getTask().getAnswer();
-                Task task = taskGenerator.getAdditionalCode();
+                Task task = getTask();
                 chatHistory.setTask(task);
                 data.setInLineKeyboard(addKeyboard());
                 yield "Ответ был: " + answer + "\n\n" + "Новый пример: " + task.getQuestion();
@@ -38,11 +45,12 @@ public class BinTest implements Function {
         return data;
     }
     private List<List<InLineButton>> addKeyboard() {
-        InLineButton helpButton = new InLineButton("Binary help", "binhelp");
-        InLineButton giveUpButton = new InLineButton("Give up", "giveup");
+        InLineButton helpButton = new InLineButton("Подсказка", "binhelp");
+        InLineButton giveUpButton = new InLineButton("Пропустить", "giveup");
         List<List<InLineButton>> linesOfButtons = new ArrayList<>();
         List<InLineButton> inLineButtons = new ArrayList<>();
-        inLineButtons.add(helpButton);
+        if (mode == TestMode.BIN)
+            inLineButtons.add(helpButton);
         inLineButtons.add(giveUpButton);
         linesOfButtons.add(inLineButtons);
         return linesOfButtons;
@@ -58,10 +66,10 @@ public class BinTest implements Function {
             functionReply.setData(processCallback(chatHistory, message.getCallback()));
             return functionReply;
         } else if (Objects.equals(message.getText(), task.getAnswer())) {
-            task = taskGenerator.getAdditionalCode();
-            data.setText("Excellently!\n" + task.getQuestion());
+            task = getTask();
+            data.setText("Отлично!\n" + task.getQuestion());
         } else {
-            data.setText("Wrong answer. Try again!\n" + task.getQuestion());
+            data.setText("Неправильно. Попробуйте снова!\n" + task.getQuestion());
         }
         chatHistory.setTask(task);
         data.setInLineKeyboard(addKeyboard());
@@ -73,7 +81,7 @@ public class BinTest implements Function {
     public FunctionReply preprocess(ChatHistory chatHistory) {
         FunctionReply functionReply = new FunctionReply();
         Data data = new Data();
-        Task task = taskGenerator.getAdditionalCode();
+        Task task = getTask();
         chatHistory.setTask(task);
         data.setText(task.getQuestion());
         data.setInLineKeyboard(addKeyboard());
