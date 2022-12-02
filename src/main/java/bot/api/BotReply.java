@@ -1,5 +1,6 @@
 package bot.api;
 
+import bot.functions.Data;
 import bot.functions.FunctionReply;
 import bot.functions.Button;
 import bot.functions.InLineButton;
@@ -9,7 +10,7 @@ import java.util.List;
 public class BotReply {
     private String userId;
     private String chatId;
-    FunctionReply functionReply;
+    Data data;
 
     public BotReply(String userId, String chatId) {
         this.userId = userId;
@@ -25,13 +26,13 @@ public class BotReply {
     }
 
     public String getText() {
-        return functionReply.getText();
+        return data.getText();
     }
 
-    public void setFunctionReply(FunctionReply functionReply) {
-        this.functionReply = functionReply;
+    public void setData(Data data) {
+        this.data = data;
     }
 
-    public List<List<InLineButton>> getInLineKeyboard() {return this.functionReply.getInLineKeyboard();}
-    public List<List<Button>> getKeyboard(){return this.functionReply.getKeyboard();}
+    public List<List<InLineButton>> getInLineKeyboard() {return this.data.getInLineKeyboard();}
+    public List<List<Button>> getKeyboard(){return this.data.getKeyboard();}
 }

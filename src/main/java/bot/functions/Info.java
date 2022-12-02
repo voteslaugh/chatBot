@@ -13,13 +13,15 @@ public class Info implements Function {
     @Override
     public FunctionReply doFunction(ChatHistory chatHistory, Message message) {
         FunctionReply functionReply = new FunctionReply();
-        functionReply.setText(text);
-        chatHistory.setNameCommand(null);
+        Data data = new Data();
+        data.setText(text);
+        functionReply.setFinishedWork(true);
+        functionReply.setData(data);
         return functionReply;
     }
 
     @Override
-    public FunctionReply startFunction(ChatHistory chatHistory) {
+    public FunctionReply preprocess(ChatHistory chatHistory) {
         return doFunction(chatHistory, null);
     }
 }

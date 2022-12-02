@@ -2,15 +2,20 @@ package bot;
 
 import bot.api.BotReply;
 import bot.api.ChatUpdate;
+import bot.functions.Command;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TelegramChatBot extends TelegramLongPollingBot {
     private final String BOT_TOKEN;
@@ -23,6 +28,17 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         this.BOT_TOKEN = BOT_TOKEN;
         this.BOT = BOT;
         this.keyboardFactory = keyboardFactory;
+        List<BotCommand> commands = new ArrayList<>();
+
+        for (Command command : BOT.getMenuCommands()) {
+            commands.add(new BotCommand(command.getName(), command.getDescription()));
+        }
+
+        try {
+            this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

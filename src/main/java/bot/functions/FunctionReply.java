@@ -3,33 +3,22 @@ package bot.functions;
 import java.util.List;
 
 public class FunctionReply {
-    private String text;
-    private List<List<InLineButton>> inLineKeyboard;
-    private List<List<Button>> keyboard;
+    private boolean isFinishedWork = false;
+    private Data data;
 
-    public List<List<InLineButton>> getInLineKeyboard() {
-        return inLineKeyboard;
+    public boolean isFinishedWork() {
+        return isFinishedWork;
     }
 
-    public void setInLineKeyboard(List<List<InLineButton>> inLineKeyboard) {
-        this.inLineKeyboard = inLineKeyboard;
+    public void setFinishedWork(boolean finishedWork) {
+        isFinishedWork = finishedWork;
     }
 
-    public List<List<Button>> getKeyboard() {
-        return keyboard;
+    public Data getData() {
+        return data;
     }
 
-    public void setKeyboard(List<List<Button>> keyboard) {
-        this.keyboard = keyboard;
-    }
-
-
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    public void setData(Data data) {
+        this.data = data;
     }
 }

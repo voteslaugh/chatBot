@@ -18,7 +18,7 @@ import java.util.Properties;
 
 public class TelegramMain {
     public static void main(String[] args) throws IOException {
-        File fileProperties = new File("..\\chatBot\\src\\main\\resources\\bot_example.properties");
+        File fileProperties = new File("..\\chatBot\\src\\main\\resources\\bot.properties");
         Properties properties = new Properties();
         properties.load(new FileReader(fileProperties));
         String botName = properties.get("bot.name").toString();
@@ -28,21 +28,21 @@ public class TelegramMain {
         TaskGenerator taskGenerator = new TaskGenerator();
 
         CommandHandler commandHandler = new CommandHandler();
-        commandHandler.addCommand(new Command("/bintest", null, new BinTest(taskGenerator), true));
-        commandHandler.addCommand(new Command("/eztest", null, new EasyTest(taskGenerator)));
-        commandHandler.addCommand(new Command("/start", null, new Info("""
-                        Привет, дорогой друг!
-                Я бот, который поможет тебе тренироваться
-                   в математических задачах и не только.
-                Для более подробной информации введи "/help"
-                """), true));
-        commandHandler.addCommand(new Command("/help", null, new Info("""
+        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new BinTest(taskGenerator), true));
+        commandHandler.addCommand(new Command("/eztest", "Задачки на счет", new EasyTest(taskGenerator), true));
+//        commandHandler.addCommand(new Command("/start", null, new Info("""
+//                        Привет, дорогой друг!
+//                Я бот, который поможет тебе тренироваться
+//                   в математических задачах и не только.
+//                Для более подробной информации введи "/help"
+//                """), false));
+        commandHandler.addCommand(new Command("Помощь", null, new Info("""
                 Вот список того, что я умею:
                 1) "/bintest", чтобы порешать
                     задачи на дополнительный код
                 2) "/eztest", чтобы решать
                     простые задачи на счёт
-                """), true));
+                """), false,true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(dataBase, textHandler);

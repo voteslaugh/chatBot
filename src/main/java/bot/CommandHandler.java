@@ -9,10 +9,6 @@ public class CommandHandler {
 
     public void addCommand(Command command) {
         String name = command.getName();
-        if (name.charAt(0) != '/') {
-            name = '/' + name;
-        }
-        name = name.replaceAll("\s", "_");
         navigation.put(name, command);
     }
 
