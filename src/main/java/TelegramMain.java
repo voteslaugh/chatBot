@@ -18,7 +18,7 @@ import java.util.Properties;
 
 public class TelegramMain {
     public static void main(String[] args) throws IOException {
-        File fileProperties = new File("..\\chatBot\\src\\main\\resources\\bot.properties");
+        File fileProperties = new File("..\\chatBot\\src\\main\\resources\\bot_example.properties");
         Properties properties = new Properties();
         properties.load(new FileReader(fileProperties));
         String botName = properties.get("bot.name").toString();
@@ -30,7 +30,19 @@ public class TelegramMain {
         CommandHandler commandHandler = new CommandHandler();
         commandHandler.addCommand(new Command("/bintest", null, new BinTest(taskGenerator), true));
         commandHandler.addCommand(new Command("/eztest", null, new EasyTest(taskGenerator)));
-        commandHandler.addCommand(new Command("/help", null, new Info("Здесь должен быть хелп"), true));
+        commandHandler.addCommand(new Command("/start", null, new Info("""
+                        Привет, дорогой друг!
+                Я бот, который поможет тебе тренироваться
+                   в математических задачах и не только.
+                Для более подробной информации введи "/help"
+                """), true));
+        commandHandler.addCommand(new Command("/help", null, new Info("""
+                Вот список того, что я умею:
+                1) "/bintest", чтобы порешать
+                    задачи на дополнительный код
+                2) "/eztest", чтобы решать
+                    простые задачи на счёт
+                """), true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(dataBase, textHandler);

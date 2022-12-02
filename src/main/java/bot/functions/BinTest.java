@@ -16,7 +16,14 @@ public class BinTest implements Function {
 
     private String processCallback(ChatHistory chatHistory, String callback) {
         return switch (callback) {
-            case "binhelp" -> "здесь должна быть теоретическая помощь по доп.коду";
+            case "binhelp" -> """
+                    Чтобы перевести число в дополнительный код, нужно:
+                    Если число >= 0, перевести в двоичную СС
+                    Если число < 0:
+                    1) Записываем модуль числа в двоичную СС
+                    2) Инвертируем все разряды
+                    3) Прибавляем единицу
+                    """;
             case "giveup" -> {
                 String answer = chatHistory.getTask().getAnswer();
                 Task task = taskGenerator.getAdditionalCode();
