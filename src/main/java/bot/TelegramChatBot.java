@@ -81,9 +81,9 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         outMessage.setChatId(botReply.getChatId());
         outMessage.setText(botReply.getText());
         InlineKeyboardMarkup inlineKeyboardMarkup = keyboardFactory.buildInLineKeyboard(botReply.getInLineKeyboard());
-        ReplyKeyboard replyKeyboard = keyboardFactory.buildKeyboard(botReply.getKeyboard());
 
         if (inlineKeyboardMarkup == null) {
+            ReplyKeyboard replyKeyboard = keyboardFactory.buildKeyboard(botReply.getKeyboard());
             if (replyKeyboard != null) {
                 outMessage.setReplyMarkup(replyKeyboard);
             }
