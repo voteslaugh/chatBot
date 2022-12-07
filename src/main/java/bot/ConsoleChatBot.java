@@ -1,9 +1,7 @@
 package bot;
 
-import bot.Bot;
 import bot.api.BotReply;
 import bot.api.ChatUpdate;
-
 import java.util.Scanner;
 
 public class ConsoleChatBot {

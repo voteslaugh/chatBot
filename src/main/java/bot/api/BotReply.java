@@ -1,7 +1,6 @@
 package bot.api;
 
 import bot.functions.Data;
-import bot.functions.FunctionReply;
 import bot.functions.Button;
 import bot.functions.InLineButton;
 
