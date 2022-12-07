@@ -47,7 +47,7 @@ public class TaskGenerator {
 
     public Task getAdditionalCode()
     {
-        long answer = longInRange(-7, 8);
+        long answer = longInRange(-7, 7);
         if (answer >= 0) {
             String binaryAnswer = Long.toBinaryString(answer);
             binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer + "=";
