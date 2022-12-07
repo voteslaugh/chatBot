@@ -1,17 +1,15 @@
 package bot.functions;
 
-import java.util.List;
-
 public class FunctionReply {
-    private boolean isFinishedWork = false;
+    private boolean isFinished = false;
     private Data data;
 
-    public boolean isFinishedWork() {
-        return isFinishedWork;
+    public boolean isFinished() {
+        return isFinished;
     }
 
-    public void setFinishedWork(boolean finishedWork) {
-        isFinishedWork = finishedWork;
+    public void setFinishedWork(boolean finished) {
+        isFinished = finished;
     }
 
     public Data getData() {

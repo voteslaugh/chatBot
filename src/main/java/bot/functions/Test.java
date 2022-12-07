@@ -83,6 +83,10 @@ public class Test implements Function {
         Data data = new Data();
         Task task = getTask();
         chatHistory.setTask(task);
+        switch (mode) {
+            case BIN -> data.setText("Переведите число из 2-ой в дополнительном коде в 10-ую СС:\n" + task.getQuestion());
+            case SIMPLE -> data.setText("Решите пример:\n" + task.getQuestion());
+        }
         data.setText(task.getQuestion());
         data.setInLineKeyboard(addKeyboard());
         functionReply.setData(data);
