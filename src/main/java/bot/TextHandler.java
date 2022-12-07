@@ -25,14 +25,14 @@ public class TextHandler {
                 data.setText("Жду команду...");
             } else {
                 FunctionReply functionReply = lastCommand.getFunction().doFunction(chatHistory, message);
-                if (functionReply.isFinishedWork())
+                if (functionReply.isFinished())
                     chatHistory.setNameCommand(null);
                 data = functionReply.getData();
             }
         } else {
             FunctionReply functionReply = command.getFunction().preprocess(chatHistory);
 
-            if (!functionReply.isFinishedWork()) {
+            if (!functionReply.isFinished()) {
                 chatHistory.setNameCommand(text);
             }
             data = functionReply.getData();
