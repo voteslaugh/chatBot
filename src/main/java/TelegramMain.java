@@ -43,7 +43,6 @@ public class TelegramMain {
                 /simpletest - простые задачи на счёт
                 """), true));
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
-        commandHandler.addCommand(new Command("/help", null, help , false));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(dataBase, textHandler);

@@ -67,9 +67,13 @@ public class Test implements Function {
             return functionReply;
         } else if (Objects.equals(message.getText(), task.getAnswer())) {
             task = getTask();
-            data.setText("Отлично!\n" + task.getQuestion());
+            String[] botAnswer  = new String[] {"\uD83E\uDD79Я тобой горжусь! Следующий пример:\n\n", "\uD83E\uDD73Отлично! Следующий пример:\n\n"};
+            int index = (int) (Math.random()*((1)+1));
+            data.setText(botAnswer[index] + task.getQuestion());
         } else {
-            data.setText("Неправильно. Попробуйте снова!\n" + task.getQuestion());
+            String[] botAnswer  = new String[] {"\uD83D\uDE1BНеверно. Попробуй снова!\n\n", "\uD83E\uDD2AНеверно. Попробуй ещё раз!\n\n", "\uD83D\uDE04Не-а. Заново!\n\n"};
+            int index = (int) (Math.random()*((2)+1));
+            data.setText(botAnswer[index] + task.getQuestion());
         }
         chatHistory.setTask(task);
         data.setInLineKeyboard(addKeyboard());
@@ -84,10 +88,10 @@ public class Test implements Function {
         Task task = getTask();
         chatHistory.setTask(task);
         switch (mode) {
-            case BIN -> data.setText("Переведите число из 2-ой в дополнительном коде в 10-ую СС:\n" + task.getQuestion());
-            case SIMPLE -> data.setText("Решите пример:\n" + task.getQuestion());
+            case BIN -> data.setText("Дано число, представленное в виде дополнительного двоичного кода.\n" +
+                    "Переведите его в 10-ую систему счисления:\n\n" + task.getQuestion());
+            case SIMPLE -> data.setText("Решите пример:\n\n" + task.getQuestion());
         }
-        data.setText(task.getQuestion());
         data.setInLineKeyboard(addKeyboard());
         functionReply.setData(data);
         return functionReply;
