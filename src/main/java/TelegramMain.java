@@ -28,8 +28,8 @@ public class TelegramMain {
 
         Function help = new Info("""
                 Вот список того, что я умею:
-                "/bintest" - задачи на дополнительный код
-                "/simpletest" - простые задачи на счёт
+                /bintest - задачи на дополнительный код
+                /simpletest - простые задачи на счёт
                 """);
         CommandHandler commandHandler = new CommandHandler();
         commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN), true));
@@ -37,7 +37,10 @@ public class TelegramMain {
         commandHandler.addCommand(new Command("/start", "Приветствие", new Info("""
                 Привет, дорогой друг!
                 Я бот, который поможет тебе тренироваться в математических задачах и не только.
-                Для более подробной информации введи "/help"
+                
+                Вот список того, что я умею:
+                /bintest - задачи на дополнительный код
+                /simpletest - простые задачи на счёт
                 """), true));
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
         commandHandler.addCommand(new Command("/help", null, help , false));
