@@ -23,7 +23,8 @@ public class TelegramMain {
         String botName = properties.get("bot.name").toString();
         String botToken = properties.get("bot.token").toString();
 
-        DataBase dataBase = new DataBase();
+        ChatHistoryRepository chatHistoryRepository = new ChatHistoryRepository();
+
         TaskGenerator taskGenerator = new TaskGenerator();
 
         Function help = new Info("""
@@ -45,7 +46,7 @@ public class TelegramMain {
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
-        BotConfig botConfig = new BotConfig(dataBase, textHandler);
+        BotConfig botConfig = new BotConfig(chatHistoryRepository, textHandler);
         Bot mathBot = new ChatBot(botConfig);
 
         TelegramChatBot telegramChatBot = new TelegramChatBot(botName, botToken, mathBot, new KeyboardFactory());

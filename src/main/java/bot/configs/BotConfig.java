@@ -1,7 +1,7 @@
 package bot.configs;
 
-import bot.DataBase;
+import bot.ChatHistoryRepository;
 import bot.TextHandler;
 
-public record BotConfig(DataBase dataBase, TextHandler textHandler) {
+public record BotConfig(ChatHistoryRepository chatHistoryRepository, TextHandler textHandler) {
 }

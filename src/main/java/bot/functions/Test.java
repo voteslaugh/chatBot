@@ -54,28 +54,42 @@ public class Test implements Function {
         linesOfButtons.add(inLineButtons);
         return linesOfButtons;
     }
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     @Override
     public FunctionReply doFunction(ChatHistory chatHistory, Message message) {
         Task task = chatHistory.getTask();
         FunctionReply functionReply = new FunctionReply();
         Data data = new Data();
-
         if (message.hasCallback()) {
             functionReply.setData(processCallback(chatHistory, message.getCallback()));
             return functionReply;
-        } else if (Objects.equals(message.getText(), task.getAnswer())) {
-            task = getTask();
-            String[] botAnswer  = new String[] {"\uD83E\uDD79Я тобой горжусь! Следующий пример:\n\n", "\uD83E\uDD73Отлично! Следующий пример:\n\n"};
-            int index = (int) (Math.random()*((1)+1));
-            data.setText(botAnswer[index] + task.getQuestion());
+        }
+        if (isNumeric(message.getText())) {
+            if (Objects.equals(message.getText(), task.getAnswer())) {
+                task = getTask();
+                String[] botAnswer = new String[]{"\uD83E\uDD79Я тобой горжусь! Следующий пример:\n\n", "\uD83E\uDD73Отлично! Следующий пример:\n\n"};
+                int index = (int) (Math.random() * ((1) + 1));
+                data.setText(botAnswer[index] + task.getQuestion());
+            } else {
+                String[] botAnswer = new String[]{"\uD83D\uDE1BНеверно. Попробуй снова!\n\n", "\uD83E\uDD2AНеверно. Попробуй ещё раз!\n\n", "\uD83D\uDE04Не-а. Заново!\n\n"};
+                int index = (int) (Math.random() * ((2) + 1));
+                data.setText(botAnswer[index] + task.getQuestion());
+            }
+            data.setInLineKeyboard(addKeyboard());
         } else {
-            String[] botAnswer  = new String[] {"\uD83D\uDE1BНеверно. Попробуй снова!\n\n", "\uD83E\uDD2AНеверно. Попробуй ещё раз!\n\n", "\uD83D\uDE04Не-а. Заново!\n\n"};
-            int index = (int) (Math.random()*((2)+1));
-            data.setText(botAnswer[index] + task.getQuestion());
+            String[] botAnswer = new String[]{"\uD83D\uDE09Нужно вводить числа!", "\uD83E\uDDD0Введи число!"};
+            int index = (int) (Math.random() * ((1) + 1));
+            data.setText(botAnswer[index]);
         }
         chatHistory.setTask(task);
-        data.setInLineKeyboard(addKeyboard());
         functionReply.setData(data);
         return functionReply;
     }
