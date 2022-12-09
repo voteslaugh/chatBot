@@ -1,12 +1,9 @@
 package bot;
 
-import bot.api.BotReply;
-import bot.api.ChatUpdate;
 import bot.functions.Button;
 import bot.functions.Data;
 import bot.functions.Command;
 import bot.functions.FunctionReply;
-
 import java.util.ArrayList;
 import java.util.List;
 
