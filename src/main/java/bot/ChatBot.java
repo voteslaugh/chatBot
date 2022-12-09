@@ -28,13 +28,13 @@ public class ChatBot implements Bot {
     public BotReply reply(ChatUpdate chatUpdate) {
         String chatId = chatUpdate.getChatId();
         BotReply botReply = new BotReply(chatUpdate.getUserId(), chatId);
-        ChatHistory chatHistory = config.dataBase().getChatHistory(chatId);
+        ChatHistory chatHistory = config.chatHistoryRepository().getChatHistory(chatId);
 
         if (chatHistory == null) {
             chatHistory = new ChatHistory();
         }
         botReply.setData(config.textHandler().process(chatHistory, chatUpdate.getMessage()));
-        config.dataBase().save(chatId, chatHistory);
+        config.chatHistoryRepository().save(chatId, chatHistory);
         return botReply;
     }
 }
