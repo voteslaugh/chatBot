@@ -1,5 +1,6 @@
 package bot;
 
+import bot.api.ChatUpdate;
 import bot.functions.Button;
 import bot.functions.Data;
 import bot.functions.Command;
@@ -14,10 +15,10 @@ public class TextHandler {
         this.commandHandler = commandHandler;
     }
 
-    public Data process(ChatHistory chatHistory, Message message) {
+    public Data process(ChatHistory chatHistory, ChatUpdate chatUpdate) {
         Data data = new Data();
 
-        String text = message.getText();
+        String text = chatUpdate.getMessage().getText();
         Command command = commandHandler.getCommand(text);
 
         if (command == null) {
@@ -27,13 +28,13 @@ public class TextHandler {
             if (lastCommand == null) {
                 data.setText("Жду команду...");
             } else {
-                FunctionReply functionReply = lastCommand.getFunction().doFunction(chatHistory, message);
+                FunctionReply functionReply = lastCommand.getFunction().doFunction(chatHistory, chatUpdate);
                 if (functionReply.isFinished())
                     chatHistory.setNameCommand(null);
                 data = functionReply.getData();
             }
         } else {
-            FunctionReply functionReply = command.getFunction().preprocess(chatHistory);
+            FunctionReply functionReply = command.getFunction().preprocess(chatHistory, chatUpdate);
 
             if (!functionReply.isFinished()) {
                 chatHistory.setNameCommand(text);

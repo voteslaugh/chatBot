@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.api.objects.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,20 +58,26 @@ public class TelegramChatBot extends TelegramLongPollingBot {
         String userId = "";
         String chatId = "";
         String callBack = null;
+        User user = null;
 
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             userId = callbackQuery.getFrom().getId().toString();
             chatId = callbackQuery.getMessage().getChatId().toString();
             callBack = callbackQuery.getData();
+            user = callbackQuery.getFrom();
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             userId = message.getFrom().getId().toString();
             chatId = message.getChatId().toString();
             text = message.getText();
+            user = message.getFrom();
         }
-        ChatUpdate chatUpdate = new ChatUpdate(userId, chatId);
+        assert user != null;
+        bot.User botUser = new bot.User(user.getFirstName(), user.getLastName());
+
+        ChatUpdate chatUpdate = new ChatUpdate(chatId, botUser);
         chatUpdate.setCallback(callBack);
         chatUpdate.setText(text);
         sendMessage(BOT.reply(chatUpdate));

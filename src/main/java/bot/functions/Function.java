@@ -1,9 +1,9 @@
 package bot.functions;
 
 import bot.ChatHistory;
-import bot.Message;
+import bot.api.ChatUpdate;
 
 public interface Function { // продумать названия
-    FunctionReply doFunction(ChatHistory chatHistory, Message message);
-    FunctionReply preprocess(ChatHistory chatHistory);
+    FunctionReply doFunction(ChatHistory chatHistory, ChatUpdate chatUpdate);
+    FunctionReply preprocess(ChatHistory chatHistory, ChatUpdate chatUpdate);
 }

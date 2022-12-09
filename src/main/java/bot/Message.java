@@ -1,6 +1,6 @@
 package bot;
 
-public class Message { // поправить название
+public class Message {
     private String text;
     private String callback;
     private boolean hasCallback = false;

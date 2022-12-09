@@ -2,6 +2,10 @@ package bot.functions;
 
 import bot.ChatHistory;
 import bot.Message;
+import bot.Stat;
+import bot.StatRepository;
+import bot.api.ChatUpdate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,10 +13,12 @@ import java.util.Objects;
 public class Test implements Function {
     private TaskGenerator taskGenerator;
     private TestMode mode;
+    private StatRepository statRepository;
 
-    public Test(TaskGenerator taskGenerator, TestMode mode) {
+    public Test(TaskGenerator taskGenerator, TestMode mode, StatRepository statRepository) {
         this.taskGenerator = taskGenerator;
         this.mode = mode;
+        this.statRepository = statRepository;
     }
     private Task getTask() {
         if (mode == TestMode.BIN)
@@ -56,7 +62,8 @@ public class Test implements Function {
     }
 
     @Override
-    public FunctionReply doFunction(ChatHistory chatHistory, Message message) {
+    public FunctionReply doFunction(ChatHistory chatHistory, ChatUpdate chatUpdate) {
+        Message message = chatUpdate.getMessage();
         Task task = chatHistory.getTask();
         FunctionReply functionReply = new FunctionReply();
         Data data = new Data();
@@ -66,6 +73,14 @@ public class Test implements Function {
             return functionReply;
         } else if (Objects.equals(message.getText(), task.getAnswer())) {
             task = getTask();
+            Stat stat = statRepository.getStat(chatUpdate.getChatId());
+
+            if (stat == null) {
+                stat = new Stat(chatUpdate.getUser());
+                statRepository.save(chatUpdate.getChatId(), stat);
+            }
+
+            stat.update();
             String[] botAnswer  = new String[] {"\uD83E\uDD79Я тобой горжусь! Следующий пример:\n\n", "\uD83E\uDD73Отлично! Следующий пример:\n\n"};
             int index = (int) (Math.random()*((1)+1));
             data.setText(botAnswer[index] + task.getQuestion());
@@ -81,7 +96,7 @@ public class Test implements Function {
     }
 
     @Override
-    public FunctionReply preprocess(ChatHistory chatHistory) {
+    public FunctionReply preprocess(ChatHistory chatHistory, ChatUpdate chatUpdate) {
         FunctionReply functionReply = new FunctionReply();
         Data data = new Data();
         Task task = getTask();

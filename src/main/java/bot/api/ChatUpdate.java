@@ -1,30 +1,31 @@
 package bot.api;
 
 import bot.Message;
+import bot.User;
 
 public class ChatUpdate {
-    private String userId;
+    private User user;
     private String chatId;
     private Message message = new Message();
 
-    public ChatUpdate(String userId, String chatId) {
-        this.userId = userId;
+    public ChatUpdate(String chatId, User user) {
         this.chatId = chatId;
+        this.user = user;
     }
     public void setCallback(String callback) {
         this.message.setCallback(callback);
     }
-    public String getUserId() {
-        return userId;
-    }
     public String getChatId() {
         return chatId;
     }
-    public void setText(String text) {
-        this.message.setText(text);
-    }
-
     public Message getMessage() {
         return message;
+    }
+
+    public User getUser() {
+        return user;
+    }
+    public void setText(String text) {
+        message.setText(text);
     }
 }

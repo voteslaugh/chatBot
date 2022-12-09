@@ -3,7 +3,6 @@ import bot.CommandHandler;
 import bot.TextHandler;
 import bot.configs.BotConfig;
 import bot.functions.*;
-import bot.DataBase;
 import bot.KeyboardFactory;
 import bot.ChatBot;
 import bot.TelegramChatBot;
@@ -24,6 +23,8 @@ public class TelegramMain {
         String botToken = properties.get("bot.token").toString();
 
         ChatHistoryRepository chatHistoryRepository = new ChatHistoryRepository();
+        StatRepository statRepositoryForBinTest = new StatRepository();
+        StatRepository statRepositoryForSimpleTest = new StatRepository();
 
         TaskGenerator taskGenerator = new TaskGenerator();
 
@@ -33,8 +34,8 @@ public class TelegramMain {
                 /simpletest - простые задачи на счёт
                 """);
         CommandHandler commandHandler = new CommandHandler();
-        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN), true));
-        commandHandler.addCommand(new Command("/simpletest", "Задачки на счет", new Test(taskGenerator, TestMode.SIMPLE), true));
+        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN, statRepositoryForBinTest), true));
+        commandHandler.addCommand(new Command("/simpletest", "Задачки на счет", new Test(taskGenerator, TestMode.SIMPLE, statRepositoryForSimpleTest), true));
         commandHandler.addCommand(new Command("/start", "Приветствие", new Info("""
                 Привет, дорогой друг!👋
                 Я бот, который поможет тебе тренироваться в математических задачах и не только.😎
@@ -44,6 +45,8 @@ public class TelegramMain {
                 /simpletest - простые задачи на счёт
                 """), true));
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
+        commandHandler.addCommand(new Command("/bintestrating", "Рейтинг бин тест", new Rating(statRepositoryForBinTest), true));
+        commandHandler.addCommand(new Command("/simpletestrating", "Рейтинг simple тест", new Rating(statRepositoryForSimpleTest), true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(chatHistoryRepository, textHandler);

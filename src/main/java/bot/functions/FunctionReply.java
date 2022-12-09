@@ -8,8 +8,8 @@ public class FunctionReply {
         return isFinished;
     }
 
-    public void setFinishedWork(boolean finished) {
-        isFinished = finished;
+    public void finish() {
+        isFinished = true;
     }
 
     public Data getData() {
