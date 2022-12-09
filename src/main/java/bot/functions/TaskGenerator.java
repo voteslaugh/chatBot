@@ -1,47 +1,65 @@
 package bot.functions;
 
 public class TaskGenerator {
-    private long min=0, max=10;
-    private String operation="+";
-
-    public void generatorOptionForMin(long min) {
+    private long min=-10, max=10;
+    private Operation operation;
+    public void minNumber(long min) {
         this.min = min;
     }
-    public void generatorOptionForMax(long max) {
+    public void maxNumber(long max) {
         this.max = max;
     }
-    public void generatorOperationOption(String operation) throws Exception {
-        if(!operation.equals("+") && !operation.equals("-") && !operation.equals("*") && !operation.equals("/"))
-            throw new Exception("Not operation spotted");
-        else
-            this.operation = operation;
-    }
 
-    private static long longInRange(long min, long max){
+    private long longInRange(long min, long max){
         return (long) (Math.random()*((max-min)+1))+min;
     }
 
-    private long getSimpleTaskAnswer(long a, long b) { //заглушка
-        switch (operation)
-        {
-            case("+"):
-                return a+b;
-            case("-"):
-                return a-b;
-            case("*"):
-                return a*b;
-            case("/"):
-                return a/b;
-            default:
-                return 1;
-        }
+    public void setRandom() {
+        int index = (int) (Math.random()*((4-1)+1)+1);
+        switch (index) {
+            case 1 -> operation = Operation.SUM;
+            case 2 -> operation = Operation.DIFF;
+            case 3 -> operation = Operation.MULTIPLICATION;
+            case 4 -> operation = Operation.DIVISION;
+        };
     }
 
     public Task getSimpleTask()  {
-        long a = longInRange(min, max);
-        long b = longInRange(min, max);
-        String answer = Long.toString(getSimpleTaskAnswer(a, b));
-        String question = a+operation+b+'=';
+        setRandom();
+        long firstNumber = longInRange(min, max);
+        long secondNumber = longInRange(min, max);
+        String answer = null, question = null;
+        if (operation == Operation.DIVISION) {
+            if (Math.abs(firstNumber) < Math.abs(secondNumber)) {
+                firstNumber = (firstNumber & secondNumber) + (firstNumber | secondNumber);
+                secondNumber = firstNumber + (~secondNumber) + 1;
+                firstNumber = firstNumber + (~secondNumber) + 1;
+            }
+            if (secondNumber < 0) question = "("+secondNumber+")";
+            else question = Long.toString(secondNumber);
+
+            if (firstNumber < 0) firstNumber = - Math.abs(firstNumber) - firstNumber % secondNumber;
+            else firstNumber = firstNumber - firstNumber % secondNumber;
+
+            answer = Long.toString(firstNumber / secondNumber);
+            question = firstNumber + " / " + question;
+        }
+        else {
+            if (secondNumber < 0) question = "("+secondNumber+")";
+            else question = Long.toString(secondNumber);
+            if (operation == Operation.SUM) {
+                answer = Long.toString(firstNumber + secondNumber);
+                question = firstNumber + " + " + question;
+            }
+            else if (operation == Operation.DIFF) {
+                answer = Long.toString(firstNumber - secondNumber);
+                question = firstNumber + " - " + question;
+            }
+            else if (operation == Operation.MULTIPLICATION) {
+                answer = Long.toString(firstNumber * secondNumber);
+                question = firstNumber + " * " + question;
+            }
+        }
         return new Task(question, answer);
     }
 
@@ -73,7 +91,7 @@ public class TaskGenerator {
             invertedSummed = inverted.substring(0, i) + invertedSummed;
             if (invertedSummed.length() == 5)
                 invertedSummed = invertedSummed.substring(0, 3);
-            return new Task(invertedSummed + "=", Long.toString(answer));
+            return new Task(invertedSummed, Long.toString(answer));
         }
 
     }
