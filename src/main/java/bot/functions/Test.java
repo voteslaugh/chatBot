@@ -80,8 +80,8 @@ public class Test implements Function {
     private List<List<InLineButton>> addKeyboard() {
         InLineButton helpButton = new InLineButton("Подсказка", "binhelp");
         InLineButton giveUpButton = new InLineButton("Пропустить", "giveup");
-        InLineButton increaseDifficulty = new InLineButton("Увеличить сложность", "increase");
-        InLineButton reduceDifficulty = new InLineButton("Уменьшить сложность", "reduce");
+        InLineButton increaseDifficulty = new InLineButton("⬆ сложность", "increase");
+        InLineButton reduceDifficulty = new InLineButton("⬇ сложность", "reduce");
         List<List<InLineButton>> linesOfButtons = new ArrayList<>();
         List<InLineButton> inLineButtons = new ArrayList<>();
         if (mode == TestMode.BIN)
