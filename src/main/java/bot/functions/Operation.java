@@ -4,5 +4,5 @@ public enum Operation {
     SUM,
     DIFF,
     MULTIPLICATION,
-    DIVISION;
+    DIVISION
 }
