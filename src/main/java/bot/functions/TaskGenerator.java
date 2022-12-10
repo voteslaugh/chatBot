@@ -1,14 +1,8 @@
 package bot.functions;
 
 public class TaskGenerator {
-    private long min=-10, max=10;
+    private Difficulty difficulty = Difficulty.EASY;
     private Operation operation;
-    public void minNumber(long min) {
-        this.min = min;
-    }
-    public void maxNumber(long max) {
-        this.max = max;
-    }
 
     private long longInRange(long min, long max){
         return (long) (Math.random()*((max-min)+1))+min;
@@ -24,11 +18,45 @@ public class TaskGenerator {
         };
     }
 
+    private long getMin() {
+        return switch (this.difficulty){
+            case EASY -> -10;
+            case MEDIUM -> -100;
+            case HARD -> -1000;
+            case EXTREME -> -1000000;
+        };
+    }
+
+    private long getMax() {
+        return Math.abs(getMin());
+    }
+
+    public void increaseDifficulty()
+    {
+        switch (this.difficulty) {
+            case EASY -> this.difficulty = Difficulty.MEDIUM;
+            case MEDIUM -> this.difficulty = Difficulty.HARD;
+            case HARD -> this.difficulty = Difficulty.EXTREME;
+        }
+    }
+
+    public void reduceDifficulty(){
+        switch (this.difficulty) {
+            case MEDIUM -> this.difficulty = Difficulty.EASY;
+            case HARD -> this.difficulty = Difficulty.MEDIUM;
+            case EXTREME -> this.difficulty = Difficulty.HARD;
+        }
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
     public Task getSimpleTask()  {
         setRandom();
-        long firstNumber = longInRange(min, max);
-        long secondNumber = longInRange(min, max);
-        String answer = null, question = null;
+        long firstNumber = longInRange(getMin(), getMax());
+        long secondNumber = longInRange(getMin(), getMax());
+        String answer = null, question;
         if (operation == Operation.DIVISION) {
             if (Math.abs(firstNumber) < Math.abs(secondNumber)) {
                 firstNumber = (firstNumber & secondNumber) + (firstNumber | secondNumber);
@@ -68,7 +96,7 @@ public class TaskGenerator {
         long answer = longInRange(-7, 7);
         if (answer >= 0) {
             String binaryAnswer = Long.toBinaryString(answer);
-            binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer + "=";
+            binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer;
             return new Task(binaryAnswer, Long.toString(answer));
         } else{
             String binaryAnswer = Long.toBinaryString(Math.abs(answer));
