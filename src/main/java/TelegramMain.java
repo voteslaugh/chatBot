@@ -47,6 +47,7 @@ public class TelegramMain {
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
         commandHandler.addCommand(new Command("/bintestrating", "Рейтинг бин тест", new Rating(statRepositoryForBinTest), true));
         commandHandler.addCommand(new Command("/simpletestrating", "Рейтинг simple тест", new Rating(statRepositoryForSimpleTest), true));
+        commandHandler.addCommand(new Command("/mystat", "Личная статистика", new PersonalStat("Ваша статистика\uD83E\uDDD0:\n\nРешено простых задач: %d\nРешено задач на доп. код: %d", statRepositoryForSimpleTest, statRepositoryForBinTest), true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
         BotConfig botConfig = new BotConfig(chatHistoryRepository, textHandler);

@@ -19,7 +19,7 @@ public class Rating implements Function {
         Data data = new Data();
 
         if (allStat.isEmpty()) {
-            data.setText("Рейтинг еще не сфоримировался\uD83D\uDE15");
+            data.setText("Рейтинг еще не сформировался\uD83D\uDE15");
         } else {
 //            allStat.sort(Comparator.comparingInt(Stat::getCount));
 
