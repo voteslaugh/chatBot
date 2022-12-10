@@ -30,8 +30,10 @@ public class TelegramMain {
 
         Function help = new Info("""
                 Вот список того, что я умею:
-                /bintest - задачи на дополнительный код
-                /simpletest - простые задачи на счёт
+                /bintest - задачи на дополнительный код 0️⃣1️⃣1️⃣0️⃣
+                /simpletest - задачи на счёт 1️⃣+1️⃣
+                /binrate - рейтинг пользователей по задачам на доп.код 📊
+                /simplerate - рейтинг пользователей по задачам на счёт 📊
                 """);
         CommandHandler commandHandler = new CommandHandler();
         commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN, statRepositoryForBinTest), true));
