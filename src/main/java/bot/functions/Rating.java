@@ -3,7 +3,9 @@ package bot.functions;
 import bot.ChatHistory;
 import bot.Stat;
 import bot.StatRepository;
+import bot.User;
 import bot.api.ChatUpdate;
+import java.util.Comparator;
 import java.util.List;
 
 public class Rating implements Function {
@@ -21,18 +23,19 @@ public class Rating implements Function {
         Data data = new Data();
 
         if (allStat.isEmpty()) {
-            data.setText("Рейтинг еще не сформировался\uD83D\uDE15");
+            data.setText("Рейтинг еще не сфоримировался\uD83D\uDE15");
         } else {
-//            allStat.sort(Comparator.comparingInt(Stat::getCount));
-
+            allStat = allStat.stream().sorted(Comparator.comparingInt(Stat::getCount)).toList();
 // отсортировать статистику и красиво вывести
             StringBuilder rating = new StringBuilder();
-            String a = "";
+            rating.append(header).append('\n');
 
+            int n = 1;
             for (Stat stat : allStat) {
-                int n = 0;
-                rating.append(header).append('\n');
-                rating.append(String.format("место %d - ", n)).append(stat.getCount()).append('\n');
+                User user = stat.getUser();
+                String n1 = user.getFirstName();
+                String n2 = user.getLastName();
+                rating.append(String.format("%d) %s %s %d\n", n, n1 , n2, stat.getCount()));
                 n += 1;
             }
             data.setText(rating.toString());

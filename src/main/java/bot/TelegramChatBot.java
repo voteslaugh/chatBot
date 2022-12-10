@@ -75,7 +75,12 @@ public class TelegramChatBot extends TelegramLongPollingBot {
             user = message.getFrom();
         }
         assert user != null;
-        bot.User botUser = new bot.User(user.getFirstName(), user.getLastName());
+        bot.User botUser = new bot.User();
+        String secondName = user.getLastName();
+
+        botUser.setFirstName(user.getFirstName());
+        botUser.setLastName(secondName == null ? " " : secondName);
+
 
         ChatUpdate chatUpdate = new ChatUpdate(chatId, botUser);
         chatUpdate.setCallback(callBack);
