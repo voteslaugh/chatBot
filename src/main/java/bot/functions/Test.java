@@ -5,9 +5,8 @@ import bot.Message;
 import bot.Stat;
 import bot.StatRepository;
 import bot.api.ChatUpdate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 
 public class Test implements Function {
     private TaskGenerator taskGenerator;
@@ -43,6 +42,36 @@ public class Test implements Function {
                 data.setInLineKeyboard(addKeyboard());
                 yield "Ответ был: " + answer + "\n\n" + "Новый пример: " + task.getQuestion();
             }
+            case "increase" -> {
+                if (mode != TestMode.SIMPLE)
+                    yield "Невозможно увеличить сложность для данного режима\uD83E\uDEE3\uD83E\uDD2D";
+                Map<Difficulty, String> botAnswers = new HashMap<Difficulty, String>() {{
+                    put(Difficulty.MEDIUM,"\uD83E\uDDD0Повышена с лёгкой до средней\uD83D\uDC4D\n\n");
+                    put(Difficulty.HARD, "\uD83D\uDE0E\uD83D\uDE0EПовышена со средней до сложной\uD83E\uDD29\n\n");
+                    put(Difficulty.EXTREME, "\uD83D\uDE35\u200D\uD83D\uDCABПовышена со сложной до экстремальной\uD83E\uDEE1\n\n");
+                }};
+                taskGenerator.increaseDifficulty();
+                Difficulty difficultyNow = taskGenerator.getDifficulty();
+                Task task = getTask();
+                chatHistory.setTask(task);
+                data.setInLineKeyboard(addKeyboard());
+                yield botAnswers.get(difficultyNow) + task.getQuestion();
+            }
+            case "reduce" -> {
+                if (mode != TestMode.SIMPLE)
+                    yield "Невозможно уменьшить сложность для данного режима\uD83E\uDEE3\uD83E\uDD2D";
+                Map<Difficulty, String> botAnswers = new HashMap<Difficulty, String>() {{
+                    put(Difficulty.EASY,"\uD83E\uDD71Понижена со средней до лёгкой\uD83E\uDD71\n\n");
+                    put(Difficulty.MEDIUM, "\uD83D\uDE2E\u200D\uD83D\uDCA8Понижена со сложной до средней\uD83E\uDD14\n\n");
+                    put(Difficulty.HARD, "\uD83D\uDE2E\u200D\uD83D\uDCA8\uD83D\uDE2E\u200D\uD83D\uDCA8Понижена с экстремальной до сложной\uD83D\uDE2E\u200D\uD83D\uDCA8\uD83D\uDE2E\u200D\uD83D\uDCA8\n\n");
+                }};
+                taskGenerator.reduceDifficulty();
+                Difficulty difficultyNow = taskGenerator.getDifficulty();
+                Task task = getTask();
+                chatHistory.setTask(task);
+                data.setInLineKeyboard(addKeyboard());
+                yield botAnswers.get(difficultyNow) + task.getQuestion();
+            }
             default -> null;
         });
 
@@ -51,11 +80,24 @@ public class Test implements Function {
     private List<List<InLineButton>> addKeyboard() {
         InLineButton helpButton = new InLineButton("Подсказка", "binhelp");
         InLineButton giveUpButton = new InLineButton("Пропустить", "giveup");
+        InLineButton increaseDifficulty = new InLineButton("Увеличить сложность", "increase");
+        InLineButton reduceDifficulty = new InLineButton("Уменьшить сложность", "reduce");
         List<List<InLineButton>> linesOfButtons = new ArrayList<>();
         List<InLineButton> inLineButtons = new ArrayList<>();
         if (mode == TestMode.BIN)
             inLineButtons.add(helpButton);
+
         inLineButtons.add(giveUpButton);
+
+        if (taskGenerator.getDifficulty() == Difficulty.EASY && mode == TestMode.SIMPLE)
+            inLineButtons.add(increaseDifficulty);
+        else if (taskGenerator.getDifficulty() == Difficulty.EXTREME && mode == TestMode.SIMPLE)
+            inLineButtons.add(reduceDifficulty);
+        else if (mode == TestMode.SIMPLE){
+            inLineButtons.add(reduceDifficulty);
+            inLineButtons.add(increaseDifficulty);
+        }
+
         linesOfButtons.add(inLineButtons);
         return linesOfButtons;
     }

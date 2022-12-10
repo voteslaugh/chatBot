@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StatRepository implements Repository {
+
     private HashMap<String, Stat> statistics = new HashMap<>();
 
     public Stat getStat(String chatId) {

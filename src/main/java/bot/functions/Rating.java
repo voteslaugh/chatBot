@@ -8,8 +8,10 @@ import java.util.List;
 
 public class Rating implements Function {
     StatRepository statRepository;
+    String header;
 
-    public Rating(StatRepository statRepository) {
+    public Rating(String header, StatRepository statRepository) {
+        this.header = header;
         this.statRepository = statRepository;
     }
 
@@ -29,6 +31,7 @@ public class Rating implements Function {
 
             for (Stat stat : allStat) {
                 int n = 0;
+                rating.append(header).append('\n');
                 rating.append(String.format("место %d - ", n)).append(stat.getCount()).append('\n');
                 n += 1;
             }

@@ -41,12 +41,14 @@ public class TelegramMain {
                 Я бот, который поможет тебе тренироваться в математических задачах и не только.😎
                 
                 Вот список того, что я умею:
-                /bintest - задачи на дополнительный код
-                /simpletest - простые задачи на счёт
+                /bintest - задачи на дополнительный код 0️⃣1️⃣1️⃣0️⃣
+                /simpletest - задачи на счёт 1️⃣+1️⃣
+                /binrate - рейтинг пользователей по задачам на доп.код 📊
+                /simplerate - рейтинг пользователей по задачам на счёт 📊
                 """), true));
         commandHandler.addCommand(new Command("Помощь", null, help , false,true));
-        commandHandler.addCommand(new Command("/bintestrating", "Рейтинг бин тест", new Rating(statRepositoryForBinTest), true));
-        commandHandler.addCommand(new Command("/simpletestrating", "Рейтинг simple тест", new Rating(statRepositoryForSimpleTest), true));
+        commandHandler.addCommand(new Command("/binrate", "Рейтинг бин тест", new Rating("Рейтинг решённых задач по дополнительному коду:", statRepositoryForBinTest), true));
+        commandHandler.addCommand(new Command("/simplerate", "Рейтинг simple тест", new Rating("Рейтинг решённых примеров:",statRepositoryForSimpleTest), true));
         commandHandler.addCommand(new Command("/mystat", "Личная статистика", new PersonalStat("Ваша статистика\uD83E\uDDD0:\n\nРешено простых задач: %d\nРешено задач на доп. код: %d", statRepositoryForSimpleTest, statRepositoryForBinTest), true));
 
         TextHandler textHandler = new TextHandler(commandHandler);
