@@ -12,17 +12,17 @@ public class Test implements Function {
     private TaskGenerator taskGenerator;
     private TestMode mode;
     private StatRepository statRepository;
-
+    private BotResponseVariants botResponseVariants;
     public Test(TaskGenerator taskGenerator, TestMode mode, StatRepository statRepository) {
         this.taskGenerator = taskGenerator;
         this.mode = mode;
         this.statRepository = statRepository;
     }
-    private Task getTask() {
+    private Task getTask(Difficulty difficulty) {
         if (mode == TestMode.BIN)
             return taskGenerator.getAdditionalCode();
         else
-            return taskGenerator.getSimpleTask();
+            return taskGenerator.getSimpleTask(difficulty);
     }
     private Data processCallback(ChatHistory chatHistory, String callback) {
         Data data = new Data();
@@ -36,10 +36,11 @@ public class Test implements Function {
                     3) Прибавляем единицу
                     """;
             case "giveup" -> {
-                String answer = chatHistory.getTask().getAnswer();
-                Task task = getTask();
+                Task lastTask = chatHistory.getTask();
+                String answer = lastTask.getAnswer();
+                Task task = getTask(lastTask.getDifficulty());
                 chatHistory.setTask(task);
-                data.setInLineKeyboard(addKeyboard());
+                data.setInLineKeyboard(addKeyboard(task.getDifficulty()));
                 yield "Ответ был: " + answer + "\n\n" + "Новый пример: " + task.getQuestion();
             }
             case "increase" -> {
@@ -50,11 +51,11 @@ public class Test implements Function {
                     put(Difficulty.HARD, "\uD83D\uDE0E\uD83D\uDE0EПовышена со средней до сложной\uD83E\uDD29\n\n");
                     put(Difficulty.EXTREME, "\uD83D\uDE35\u200D\uD83D\uDCABПовышена со сложной до экстремальной\uD83E\uDEE1\n\n");
                 }};
-                taskGenerator.increaseDifficulty();
-                Difficulty difficultyNow = taskGenerator.getDifficulty();
-                Task task = getTask();
+                Task lastTask = chatHistory.getTask();
+                Difficulty difficultyNow = taskGenerator.increaseDifficulty(lastTask.getDifficulty());
+                Task task = getTask(difficultyNow);
                 chatHistory.setTask(task);
-                data.setInLineKeyboard(addKeyboard());
+                data.setInLineKeyboard(addKeyboard(task.getDifficulty()));
                 yield botAnswers.get(difficultyNow) + task.getQuestion();
             }
             case "reduce" -> {
@@ -65,11 +66,11 @@ public class Test implements Function {
                     put(Difficulty.MEDIUM, "\uD83D\uDE2E\u200D\uD83D\uDCA8Понижена со сложной до средней\uD83E\uDD14\n\n");
                     put(Difficulty.HARD, "\uD83D\uDE2E\u200D\uD83D\uDCA8\uD83D\uDE2E\u200D\uD83D\uDCA8Понижена с экстремальной до сложной\uD83D\uDE2E\u200D\uD83D\uDCA8\uD83D\uDE2E\u200D\uD83D\uDCA8\n\n");
                 }};
-                taskGenerator.reduceDifficulty();
-                Difficulty difficultyNow = taskGenerator.getDifficulty();
-                Task task = getTask();
+                Task lastTask = chatHistory.getTask();
+                Difficulty difficultyNow = taskGenerator.reduceDifficulty(lastTask.getDifficulty());
+                Task task = getTask(difficultyNow);
                 chatHistory.setTask(task);
-                data.setInLineKeyboard(addKeyboard());
+                data.setInLineKeyboard(addKeyboard(difficultyNow));
                 yield botAnswers.get(difficultyNow) + task.getQuestion();
             }
             default -> null;
@@ -77,7 +78,7 @@ public class Test implements Function {
 
         return data;
     }
-    private List<List<InLineButton>> addKeyboard() {
+    private List<List<InLineButton>> addKeyboard(Difficulty difficulty) {
         InLineButton helpButton = new InLineButton("Подсказка", "binhelp");
         InLineButton giveUpButton = new InLineButton("Пропустить", "giveup");
         InLineButton increaseDifficulty = new InLineButton("⬆ сложность", "increase");
@@ -89,9 +90,9 @@ public class Test implements Function {
 
         inLineButtons.add(giveUpButton);
 
-        if (taskGenerator.getDifficulty() == Difficulty.EASY && mode == TestMode.SIMPLE)
+        if (difficulty == Difficulty.EASY && mode == TestMode.SIMPLE)
             inLineButtons.add(increaseDifficulty);
-        else if (taskGenerator.getDifficulty() == Difficulty.EXTREME && mode == TestMode.SIMPLE)
+        else if (difficulty == Difficulty.EXTREME && mode == TestMode.SIMPLE)
             inLineButtons.add(reduceDifficulty);
         else if (mode == TestMode.SIMPLE){
             inLineButtons.add(reduceDifficulty);
@@ -123,7 +124,8 @@ public class Test implements Function {
         }
         if (isNumeric(message.getText())) {
             if (Objects.equals(message.getText(), task.getAnswer())) {
-                task = getTask();
+                Task lastTask = chatHistory.getTask();
+                task = getTask(lastTask.getDifficulty());
                 Stat stat = statRepository.getStat(chatUpdate.getChatId());
 
                 if (stat == null) {
@@ -132,19 +134,13 @@ public class Test implements Function {
                 }
 
                 stat.update();
-                String[] botAnswer = new String[]{"\uD83E\uDD79Я тобой горжусь! Следующий пример:\n\n", "\uD83E\uDD73Отлично! Следующий пример:\n\n"};
-                int index = (int) (Math.random() * ((1) + 1));
-                data.setText(botAnswer[index] + task.getQuestion());
+                data.setText(botResponseVariants.getRandomReply(BotResponseCase.RIGHT_ANSWER) + task.getQuestion());
             } else {
-                String[] botAnswer = new String[]{"\uD83D\uDE1BНеверно. Попробуй снова!\n\n", "\uD83E\uDD2AНеверно. Попробуй ещё раз!\n\n", "\uD83D\uDE04Не-а. Заново!\n\n"};
-                int index = (int) (Math.random() * ((2) + 1));
-                data.setText(botAnswer[index] + task.getQuestion());
+                data.setText(botResponseVariants.getRandomReply(BotResponseCase.WRONG_ANSWER) + task.getQuestion());
             }
-            data.setInLineKeyboard(addKeyboard());
+            data.setInLineKeyboard(addKeyboard(task.getDifficulty()));
         } else {
-            String[] botAnswer = new String[]{"\uD83D\uDE09Нужно вводить числа!", "\uD83E\uDDD0Введи число!"};
-            int index = (int) (Math.random() * ((1) + 1));
-            data.setText(botAnswer[index]);
+            data.setText(botResponseVariants.getRandomReply(BotResponseCase.BAD_FORM) + task.getQuestion());
         }
         chatHistory.setTask(task);
         functionReply.setData(data);
@@ -155,14 +151,14 @@ public class Test implements Function {
     public FunctionReply preprocess(ChatHistory chatHistory, ChatUpdate chatUpdate) {
         FunctionReply functionReply = new FunctionReply();
         Data data = new Data();
-        Task task = getTask();
+        Task task = getTask(Difficulty.EASY);
         chatHistory.setTask(task);
         switch (mode) {
             case BIN -> data.setText("Дано число, представленное в виде дополнительного двоичного кода.\n" +
                     "Переведите его в 10-ую систему счисления:\n\n" + task.getQuestion());
             case SIMPLE -> data.setText("Решите пример:\n\n" + task.getQuestion());
         }
-        data.setInLineKeyboard(addKeyboard());
+        data.setInLineKeyboard(addKeyboard(task.getDifficulty()));
         functionReply.setData(data);
         return functionReply;
     }

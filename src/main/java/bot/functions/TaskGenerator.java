@@ -1,16 +1,9 @@
 package bot.functions;
 
-public class TaskGenerator {
-    private Difficulty difficulty = Difficulty.EASY;
+public class TaskGenerator extends Randomizer{
     private Operation operation;
-
-    private long longInRange(long min, long max){
-        return (long) (Math.random()*((max-min)+1))+min;
-    }
-
     public void setRandom() {
-        int index = (int) (Math.random()*((4-1)+1)+1);
-        switch (index) {
+        switch ((int) getLongInRange(1, 4)) {
             case 1 -> operation = Operation.SUM;
             case 2 -> operation = Operation.DIFF;
             case 3 -> operation = Operation.MULTIPLICATION;
@@ -18,8 +11,8 @@ public class TaskGenerator {
         };
     }
 
-    private long getMin() {
-        return switch (this.difficulty){
+    private long getMin(Difficulty difficulty) {
+        return switch (difficulty){
             case EASY -> -10;
             case MEDIUM -> -100;
             case HARD -> -1000;
@@ -27,35 +20,33 @@ public class TaskGenerator {
         };
     }
 
-    private long getMax() {
-        return Math.abs(getMin());
+    private long getMax(Difficulty difficulty) {
+        return Math.abs(getMin(difficulty));
     }
 
-    public void increaseDifficulty()
+    public Difficulty increaseDifficulty(Difficulty difficulty)
     {
-        switch (this.difficulty) {
-            case EASY -> this.difficulty = Difficulty.MEDIUM;
-            case MEDIUM -> this.difficulty = Difficulty.HARD;
-            case HARD -> this.difficulty = Difficulty.EXTREME;
-        }
+        return switch (difficulty) {
+            case EASY -> Difficulty.MEDIUM;
+            case MEDIUM -> Difficulty.HARD;
+            case HARD -> Difficulty.EXTREME;
+            case EXTREME -> null;
+        };
     }
 
-    public void reduceDifficulty(){
-        switch (this.difficulty) {
-            case MEDIUM -> this.difficulty = Difficulty.EASY;
-            case HARD -> this.difficulty = Difficulty.MEDIUM;
-            case EXTREME -> this.difficulty = Difficulty.HARD;
-        }
+    public Difficulty reduceDifficulty(Difficulty difficulty){
+        return switch (difficulty) {
+            case EASY -> null;
+            case MEDIUM -> Difficulty.EASY;
+            case HARD -> Difficulty.MEDIUM;
+            case EXTREME -> Difficulty.HARD;
+        };
     }
 
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public Task getSimpleTask()  {
+    public Task getSimpleTask(Difficulty difficulty)  {
         setRandom();
-        long firstNumber = longInRange(getMin(), getMax());
-        long secondNumber = longInRange(getMin(), getMax());
+        long firstNumber = getLongInRange(getMin(difficulty), getMax(difficulty));
+        long secondNumber = getLongInRange(getMin(difficulty), getMax(difficulty));
         String answer = null, question;
         if (operation == Operation.DIVISION) {
             if (Math.abs(firstNumber) < Math.abs(secondNumber)) {
@@ -88,16 +79,16 @@ public class TaskGenerator {
                 question = firstNumber + " * " + question;
             }
         }
-        return new Task(question, answer);
+        return new Task(question, answer, difficulty);
     }
 
     public Task getAdditionalCode()
     {
-        long answer = longInRange(-7, 7);
+        long answer = getLongInRange(-7, 7);
         if (answer >= 0) {
             String binaryAnswer = Long.toBinaryString(answer);
             binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer;
-            return new Task(binaryAnswer, Long.toString(answer));
+            return new Task(binaryAnswer, Long.toString(answer), null);
         } else{
             String binaryAnswer = Long.toBinaryString(Math.abs(answer));
             binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer;
@@ -119,7 +110,7 @@ public class TaskGenerator {
             invertedSummed = inverted.substring(0, i) + invertedSummed;
             if (invertedSummed.length() == 5)
                 invertedSummed = invertedSummed.substring(0, 3);
-            return new Task(invertedSummed, Long.toString(answer));
+            return new Task(invertedSummed, Long.toString(answer), Difficulty.EASY);
         }
 
     }
