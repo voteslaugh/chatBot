@@ -36,8 +36,29 @@ public class TelegramMain {
                 /simplerate - рейтинг пользователей по задачам на счёт 📊
                 """);
         CommandHandler commandHandler = new CommandHandler();
-        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код", new Test(taskGenerator, TestMode.BIN, statRepositoryForBinTest), true));
-        commandHandler.addCommand(new Command("/simpletest", "Задачки на счет", new Test(taskGenerator, TestMode.SIMPLE, statRepositoryForSimpleTest), true));
+        commandHandler.addCommand(new Command("/bintest", "Задачки на доп. код",
+                new Test(taskGenerator, TestMode.BIN, statRepositoryForBinTest, new BotResponseVariants(
+                        new String[]{"\uD83E\uDD79Я тобой горжусь! Следующий пример!\n\n",
+                        "\uD83D\uDE33\uD83E\uDD73Не ты ли Алан Тьюринг? Следующий пример!\n\n",
+                        "\uD83D\uDE0DПереводишь лучше всех! Следующией пример!\n\n"},
+                        new String[]{"\uD83D\uDE1BНеверно. Попробуй снова!\n\n",
+                        "\uD83E\uDD28Не так. \uD83D\uDE43Может тебе нужна подсказка?\n\n",
+                        "\uD83D\uDE04Не-а. Заново!\n\n"},
+                        new String[]{"\uD83D\uDE09Введи переведённое число!\n\n",
+                                "\uD83E\uDDD0Ответ может быть только числом!\n\n",
+                                "\uD83D\uDE0CНе забывай, нужно перевести доп.код!\n\n"})),
+                true));
+        commandHandler.addCommand(new Command("/simpletest", "Задачки на счет", new Test(taskGenerator, TestMode.SIMPLE, statRepositoryForSimpleTest, new BotResponseVariants(
+                new String[]{"\uD83E\uDD79Я тобой горжусь! Следующий пример!\n\n",
+                        "\uD83D\uDE33\uD83E\uDD73Не ты ли Пифагор? Следующий пример!\n\n",
+                        "\uD83D\uDE0DСчитаешь лучше всех! Следующией пример!\n\n"},
+                new String[]{"\uD83D\uDE1BНеверно. Попробуй снова!\n\n",
+                        "\uD83E\uDD28Не так. \uD83D\uDE43Попробуй ещё!\n\n",
+                        "\uD83D\uDE04Не-а. Заново!\n\n"},
+                new String[]{"\uD83D\uDE09Нужно посчитать пример!\n\n",
+                        "\uD83E\uDDD0Ответ может быть только числом!\n\n",
+                        "\uD83D\uDE0CНе забывай, нужно решить пример!\n\n"})),
+                true));
         commandHandler.addCommand(new Command("/start", "Приветствие", new Info("""
                 Привет, дорогой друг!👋
                 Я бот, который поможет тебе тренироваться в математических задачах и не только.😎

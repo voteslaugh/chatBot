@@ -13,10 +13,11 @@ public class Test implements Function {
     private TestMode mode;
     private StatRepository statRepository;
     private BotResponseVariants botResponseVariants;
-    public Test(TaskGenerator taskGenerator, TestMode mode, StatRepository statRepository) {
+    public Test(TaskGenerator taskGenerator, TestMode mode, StatRepository statRepository, BotResponseVariants botResponseVariants) {
         this.taskGenerator = taskGenerator;
         this.mode = mode;
         this.statRepository = statRepository;
+        this.botResponseVariants = botResponseVariants;
     }
     private Task getTask(Difficulty difficulty) {
         if (mode == TestMode.BIN)
