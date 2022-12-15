@@ -5,4 +5,8 @@ public class Randomizer {
         return ((long) (Math.random() * ((max - min) + 1)))+min;
     }
 
+    public long getRandomIndex(int size) {
+        return getLongInRange(0, size - 1);
+    }
+
 }

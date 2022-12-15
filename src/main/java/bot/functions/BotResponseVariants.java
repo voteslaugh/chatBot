@@ -15,9 +15,9 @@ public class BotResponseVariants extends Randomizer{
     public String getRandomReply(BotResponseCase responseCase)
     {
         return switch (responseCase){
-            case RIGHT_ANSWER -> rightAnswerReplies[(int)getLongInRange(0, rightAnswerReplies.length)];
-            case WRONG_ANSWER -> wrongAnswerReplies[(int)getLongInRange(0, wrongAnswerReplies.length)];
-            case BAD_FORM -> badFormReplies[(int)getLongInRange(0, badFormReplies.length)];
+            case RIGHT_ANSWER -> rightAnswerReplies[(int)getRandomIndex(rightAnswerReplies.length)];
+            case WRONG_ANSWER -> wrongAnswerReplies[(int)getRandomIndex(wrongAnswerReplies.length)];
+            case BAD_FORM -> badFormReplies[(int)getRandomIndex(badFormReplies.length)];
         };
     }
 
