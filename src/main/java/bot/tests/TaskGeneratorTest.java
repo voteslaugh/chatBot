@@ -1,5 +1,8 @@
-package bot.functions;
+package bot.tests;
 
+import bot.functions.Difficulty;
+import bot.functions.Task;
+import bot.functions.TaskGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

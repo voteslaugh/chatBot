@@ -1,9 +1,10 @@
-package bot.functions;
+package bot.tests;
 
 import bot.ChatHistory;
 import bot.StatRepository;
 import bot.User;
 import bot.api.ChatUpdate;
+import bot.functions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
