@@ -10,17 +10,23 @@ import java.util.*;
 
 public class Test implements Function {
     private TaskGenerator taskGenerator;
-    private TestMode mode;
+    private TestMode testMode;
+
     private StatRepository statRepository;
     private BotResponseVariants botResponseVariants;
     public Test(TaskGenerator taskGenerator, TestMode mode, StatRepository statRepository, BotResponseVariants botResponseVariants) {
         this.taskGenerator = taskGenerator;
-        this.mode = mode;
+        this.testMode = mode;
         this.statRepository = statRepository;
         this.botResponseVariants = botResponseVariants;
     }
+
+    public void setTestMode(TestMode testMode) {
+        this.testMode = testMode;
+    }
+
     private Task getTask(Difficulty difficulty) {
-        if (mode == TestMode.BIN)
+        if (testMode == TestMode.BIN)
             return taskGenerator.getAdditionalCode();
         else
             return taskGenerator.getSimpleTask(difficulty);
@@ -45,7 +51,7 @@ public class Test implements Function {
                 yield "Ответ был: " + answer + "\n\n" + "Новый пример: " + task.getQuestion();
             }
             case "increase" -> {
-                if (mode != TestMode.SIMPLE)
+                if (testMode != TestMode.SIMPLE)
                     yield "Невозможно увеличить сложность для данного режима\uD83E\uDEE3\uD83E\uDD2D";
                 Map<Difficulty, String> botAnswers = new HashMap<Difficulty, String>() {{
                     put(Difficulty.MEDIUM,"\uD83E\uDDD0Повышена с лёгкой до средней\uD83D\uDC4D\n\n");
@@ -60,7 +66,7 @@ public class Test implements Function {
                 yield botAnswers.get(difficultyNow) + task.getQuestion();
             }
             case "reduce" -> {
-                if (mode != TestMode.SIMPLE)
+                if (testMode != TestMode.SIMPLE)
                     yield "Невозможно уменьшить сложность для данного режима\uD83E\uDEE3\uD83E\uDD2D";
                 Map<Difficulty, String> botAnswers = new HashMap<Difficulty, String>() {{
                     put(Difficulty.EASY,"\uD83E\uDD71Понижена со средней до лёгкой\uD83E\uDD71\n\n");
@@ -86,16 +92,16 @@ public class Test implements Function {
         InLineButton reduceDifficulty = new InLineButton("⬇ сложность", "reduce");
         List<List<InLineButton>> linesOfButtons = new ArrayList<>();
         List<InLineButton> inLineButtons = new ArrayList<>();
-        if (mode == TestMode.BIN)
+        if (testMode == TestMode.BIN)
             inLineButtons.add(helpButton);
 
         inLineButtons.add(giveUpButton);
 
-        if (difficulty == Difficulty.EASY && mode == TestMode.SIMPLE)
+        if (difficulty == Difficulty.EASY && testMode == TestMode.SIMPLE)
             inLineButtons.add(increaseDifficulty);
-        else if (difficulty == Difficulty.EXTREME && mode == TestMode.SIMPLE)
+        else if (difficulty == Difficulty.EXTREME && testMode == TestMode.SIMPLE)
             inLineButtons.add(reduceDifficulty);
-        else if (mode == TestMode.SIMPLE){
+        else if (testMode == TestMode.SIMPLE){
             inLineButtons.add(reduceDifficulty);
             inLineButtons.add(increaseDifficulty);
         }
@@ -154,7 +160,7 @@ public class Test implements Function {
         Data data = new Data();
         Task task = getTask(Difficulty.EASY);
         chatHistory.setTask(task);
-        switch (mode) {
+        switch (testMode) {
             case BIN -> data.setText("Дано число, представленное в виде дополнительного двоичного кода.\n" +
                     "Переведите его в 10-ую систему счисления:\n\n" + task.getQuestion());
             case SIMPLE -> data.setText("Решите пример:\n\n" + task.getQuestion());

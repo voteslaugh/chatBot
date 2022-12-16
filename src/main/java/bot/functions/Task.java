@@ -9,6 +9,10 @@ public class Task {
         return difficulty;
     }
 
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public Task(String question, String answer, Difficulty difficulty) {
         this.question = question;
         this.answer = answer;

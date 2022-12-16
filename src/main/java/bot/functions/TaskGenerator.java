@@ -2,6 +2,11 @@ package bot.functions;
 
 public class TaskGenerator extends Randomizer{
     private Operation operation;
+
+    public Operation getOperation() {
+        return operation;
+    }
+
     public void setRandom() {
         switch ((int) getLongInRange(1, 4)) {
             case 1 -> operation = Operation.SUM;
@@ -56,11 +61,15 @@ public class TaskGenerator extends Randomizer{
             }
             if (secondNumber < 0) question = "("+secondNumber+")";
             else question = Long.toString(secondNumber);
+            try {
+                if (firstNumber < 0) firstNumber = -Math.abs(firstNumber) - firstNumber % secondNumber;
+                else firstNumber = firstNumber - firstNumber % secondNumber;
 
-            if (firstNumber < 0) firstNumber = - Math.abs(firstNumber) - firstNumber % secondNumber;
-            else firstNumber = firstNumber - firstNumber % secondNumber;
-
-            answer = Long.toString(firstNumber / secondNumber);
+                answer = Long.toString(firstNumber / secondNumber);
+            } catch (ArithmeticException e) {
+                answer = String.valueOf(firstNumber);
+                secondNumber = 1;
+            }
             question = firstNumber + " / " + question;
         }
         else {
@@ -88,13 +97,13 @@ public class TaskGenerator extends Randomizer{
         if (answer >= 0) {
             String binaryAnswer = Long.toBinaryString(answer);
             binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer;
-            return new Task(binaryAnswer, Long.toString(answer), null);
+            return new Task(binaryAnswer, Long.toString(answer), Difficulty.EASY);
         } else{
             String binaryAnswer = Long.toBinaryString(Math.abs(answer));
             binaryAnswer = "0".repeat(4 - binaryAnswer.length()) + binaryAnswer;
-            String inverted = "";
+            StringBuilder inverted = new StringBuilder();
             for (int i=0; i<binaryAnswer.length(); ++i) {
-                inverted += (Byte.parseByte(String.valueOf(binaryAnswer.charAt(i))) + 1) % 2;
+                inverted.append((Byte.parseByte(String.valueOf(binaryAnswer.charAt(i))) + 1) % 2);
             }
             String invertedSummed = "";
             int i=inverted.length()-1;
