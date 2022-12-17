@@ -1,6 +1,7 @@
 package bot.functions;
+import static bot.functions.Randomizer.getLongInRange;
 
-public class TaskGenerator extends Randomizer{
+public class TaskGenerator {
     private Operation operation;
 
     public Operation getOperation() {

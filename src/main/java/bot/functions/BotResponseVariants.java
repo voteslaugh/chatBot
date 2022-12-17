@@ -1,9 +1,9 @@
 package bot.functions;
+import static bot.functions.Randomizer.getRandomCollectionElement;
 
-public class BotResponseVariants extends Randomizer{
+public class BotResponseVariants {
     String[] rightAnswerReplies;
     String[] wrongAnswerReplies;
-
     String[] badFormReplies;
 
     public BotResponseVariants(String[] rightAnswerReplies, String[] wrongAnswerReplies, String[] badFormReplies) {
@@ -15,9 +15,9 @@ public class BotResponseVariants extends Randomizer{
     public String getRandomReply(BotResponseCase responseCase)
     {
         return switch (responseCase){
-            case RIGHT_ANSWER -> rightAnswerReplies[(int)getRandomIndex(rightAnswerReplies.length)];
-            case WRONG_ANSWER -> wrongAnswerReplies[(int)getRandomIndex(wrongAnswerReplies.length)];
-            case BAD_FORM -> badFormReplies[(int)getRandomIndex(badFormReplies.length)];
+            case RIGHT_ANSWER -> getRandomCollectionElement(rightAnswerReplies);
+            case WRONG_ANSWER -> getRandomCollectionElement(wrongAnswerReplies);
+            case BAD_FORM -> getRandomCollectionElement(badFormReplies);
         };
     }
 
