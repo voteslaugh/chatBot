@@ -5,7 +5,7 @@ public class Randomizer {
         return ((long) (Math.random() * ((max - min) + 1)))+min;
     }
 
-    public static String getRandomCollectionElement(String[] stringCollection) {
+    public static Object getRandomCollectionElement(Object[] stringCollection) {
         return stringCollection[(int) getLongInRange(0, stringCollection.length - 1)];
     }
 

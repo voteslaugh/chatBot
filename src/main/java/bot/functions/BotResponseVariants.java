@@ -12,7 +12,7 @@ public class BotResponseVariants {
         this.badFormReplies = badFormReplies;
     }
 
-    public String getRandomReply(BotResponseCase responseCase)
+    public Object getRandomReply(BotResponseCase responseCase)
     {
         return switch (responseCase){
             case RIGHT_ANSWER -> getRandomCollectionElement(rightAnswerReplies);
