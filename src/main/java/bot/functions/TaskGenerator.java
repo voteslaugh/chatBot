@@ -60,17 +60,12 @@ public class TaskGenerator {
                 secondNumber = firstNumber + (~secondNumber) + 1;
                 firstNumber = firstNumber + (~secondNumber) + 1;
             }
+            if (secondNumber == 0) secondNumber = 1;
             if (secondNumber < 0) question = "("+secondNumber+")";
             else question = Long.toString(secondNumber);
-            try {
-                if (firstNumber < 0) firstNumber = -Math.abs(firstNumber) - firstNumber % secondNumber;
-                else firstNumber = firstNumber - firstNumber % secondNumber;
-
-                answer = Long.toString(firstNumber / secondNumber);
-            } catch (ArithmeticException e) {
-                answer = String.valueOf(firstNumber);
-                secondNumber = 1;
-            }
+            if (firstNumber < 0) firstNumber = -Math.abs(firstNumber) - firstNumber % secondNumber;
+            else firstNumber = firstNumber - firstNumber % secondNumber;
+            answer = Long.toString(firstNumber / secondNumber);
             question = firstNumber + " / " + question;
         }
         else {

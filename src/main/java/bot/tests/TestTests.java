@@ -13,106 +13,219 @@ class TestTests {
     ChatHistory chatHistory;
     ChatUpdate chatUpdate;
     FunctionReply functionReply;
-    Task task;
     Data data;
-    int answer;
     bot.functions.Test test;
 
     @BeforeEach
     void prepareData() {
         chatHistory = new ChatHistory();
-        chatHistory.setTask(new Task("1+1", "2", Difficulty.EASY));
-        chatUpdate = new ChatUpdate("1", new User());
-        chatUpdate.setText("2");
         data = new Data();
         functionReply = new FunctionReply();
-        task = new Task("1+1", "2", Difficulty.EASY);
+        chatUpdate = new ChatUpdate("", new User());
         test = new  bot.functions.Test(new TaskGenerator(), TestMode.SIMPLE, new StatRepository(),
-                new BotResponseVariants(new String[]{""}, new String[]{""}, new String[]{""}));
+                new BotResponseVariants(new String[]{"Right answer"}, new String[]{"Wrong answer"}, new String[]{"Bad form"}));
     }
 
-    private void updateDoFunction(FunctionReply functionReply) {
+    @Test
+    void testSimpleDoFunctionEasyRightAnswer() {
+        chatUpdate.setText("1");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EASY));
         functionReply = test.doFunction(chatHistory, chatUpdate);
-        task = chatHistory.getTask();
         data = functionReply.getData();
-        answer = Integer.parseInt(task.getAnswer());
-    }
-
-    private void updatePreprocess(FunctionReply functionReply) {
-        functionReply = test.preprocess(chatHistory, chatUpdate);
-        task = chatHistory.getTask();
-        data = functionReply.getData();
-        answer = Integer.parseInt(task.getAnswer());
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Right answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && data.getInLineKeyboard() != null && !functionReply.isFinished());
     }
 
     @Test
-    void testSimpleDoFunctionEasy() {
-        updateDoFunction(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.EASY &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 100 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
-    }
-
-    @Test
-    void testSimpleDoFunctionMedium() {
-        chatHistory.setTask(new Task("", "2", Difficulty.MEDIUM));
-        updateDoFunction(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.MEDIUM &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 10000 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
-    }
-
-    @Test
-    void testSimpleDoFunctionHard() {
-        chatHistory.setTask(new Task("", "2", Difficulty.HARD));
-        updateDoFunction(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.HARD &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 1000000 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
-    }
-
-    @Test
-    void testSimpleDoFunctionExtreme() {
-        chatHistory.setTask(new Task("", "2", Difficulty.EXTREME));
+    void testSimpleDoFunctionEasyWrongAnswer() {
+        chatUpdate.setText("0");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EASY));
         functionReply = test.doFunction(chatHistory, chatUpdate);
-        task = chatHistory.getTask();
         data = functionReply.getData();
-        long answer = Long.parseLong(task.getAnswer());
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.EXTREME &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 1000000000000L &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Wrong answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
     }
 
     @Test
-    void testAdditionalDoFunction() {
+    void testSimpleDoFunctionEasyBadForm() {
+        chatUpdate.setText("asd");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EASY));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Bad form") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionMediumRightAnswer() {
+        chatUpdate.setText("1");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.MEDIUM));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Right answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionMediumWrongAnswer() {
+        chatUpdate.setText("0");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.MEDIUM));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Wrong answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionMediumBadForm() {
+        chatUpdate.setText("asd");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.MEDIUM));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Bad form") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionHardRightAnswer() {
+        chatUpdate.setText("1");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.HARD));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Right answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionHardWrongAnswer() {
+        chatUpdate.setText("0");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.HARD));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Wrong answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionHardBadForm() {
+        chatUpdate.setText("asd");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.HARD));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Bad form") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionExtremeRightAnswer() {
+        chatUpdate.setText("1");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EXTREME));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Right answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionExtremeWrongAnswer() {
+        chatUpdate.setText("0");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EXTREME));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Wrong answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testSimpleDoFunctionExtremeBadForm() {
+        chatUpdate.setText("asd");
+        chatHistory.setTask(new Task("2-1", "1", Difficulty.EXTREME));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Bad form") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testAdditionalDoFunctionRightAnswer() {
         test.setTestMode(TestMode.BIN);
-        updateDoFunction(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.EASY &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 7 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
+        chatUpdate.setText("1");
+        chatHistory.setTask(new Task("0001", "1", Difficulty.EASY));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Right answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testAdditionalDoFunctionWrongAnswer() {
+        chatUpdate.setText("0");
+        chatHistory.setTask(new Task("0001", "1", Difficulty.EXTREME));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Wrong answer") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
+    }
+
+    @Test
+    void testAdditionalDoFunctionBadForm() {
+        chatUpdate.setText("asd");
+        chatHistory.setTask(new Task("0001", "1", Difficulty.EXTREME));
+        functionReply = test.doFunction(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().contains("Bad form") && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
     }
 
     @Test
     void testSimplePreprocess() {
-        updatePreprocess(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.EASY &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 100 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
+        functionReply = test.preprocess(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().equals("Решите пример:\n\n" + newQuestion) && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
     }
 
     @Test
     void testAdditionalPreprocess() {
         test.setTestMode(TestMode.BIN);
-        updatePreprocess(functionReply);
-        Assertions.assertTrue(task.getDifficulty() == Difficulty.EASY &&
-                !task.getQuestion().isEmpty() && Math.abs(answer) <= 7 &&
-                data.getInLineKeyboard() != null && data.getText() != null &&
-                !functionReply.isFinished());
+        functionReply = test.preprocess(chatHistory, chatUpdate);
+        data = functionReply.getData();
+        String newQuestion = chatHistory.getTask().getQuestion();
+        String newAnswer = chatHistory.getTask().getAnswer();
+        Assertions.assertTrue(data.getText().equals("Дано число, представленное в виде дополнительного двоичного кода.\n" +
+                "Переведите его в 10-ую систему счисления:\n\n" + newQuestion) && !newQuestion.isEmpty() &&
+                !newAnswer.isEmpty() && !functionReply.isFinished());
     }
 }

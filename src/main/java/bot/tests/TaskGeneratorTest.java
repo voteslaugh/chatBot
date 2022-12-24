@@ -10,10 +10,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class TaskGeneratorTest {
     TaskGenerator taskGenerator;
     Task task;
-
+    Map <String, Integer> additionalQuestionToAnswer = new HashMap<>() {{
+        put("0000", 0); put("0001", 1); put("0010", 2); put("0011", 3); put("0100", 4);
+        put("0101", 5); put("0110", 6); put("0111", 7); put("1111", -1); put("1110", -2);
+        put("1101", -3); put("1100", -4); put("1011", -5); put("1010", -6); put("1001", -7);
+    }};
     @BeforeEach
     void prepareData() {
         taskGenerator = new TaskGenerator();
@@ -88,11 +95,11 @@ class TaskGeneratorTest {
                 answer == botAnswer && simpleTask.getQuestion() != null);
     }
 
-    @Test
+    @RepeatedTest(10)
     void testGetAdditionalCode() {
         Task additionalCodeTask = taskGenerator.getAdditionalCode();
-        int answer = Integer.parseInt(additionalCodeTask.getAnswer());
-        Assertions.assertTrue(Math.abs(answer) <= 7 && additionalCodeTask.getAnswer() != null &&
-                additionalCodeTask.getDifficulty() == Difficulty.EASY);
+        int botAnswer = Integer.parseInt(additionalCodeTask.getAnswer());
+        int answer = additionalQuestionToAnswer.get(additionalCodeTask.getQuestion());
+        Assertions.assertTrue(botAnswer == answer && additionalCodeTask.getDifficulty() == Difficulty.EASY);
     }
 }
