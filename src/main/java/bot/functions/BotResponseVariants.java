@@ -20,5 +20,4 @@ public class BotResponseVariants {
             case BAD_FORM -> getRandomCollectionElement(badFormReplies);
         };
     }
-
 }

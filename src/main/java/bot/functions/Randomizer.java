@@ -9,5 +9,4 @@ public class Randomizer {
     public static Object getRandomCollectionElement(Object[] stringCollection) {
         return stringCollection[(int) getLongInRange(0, stringCollection.length - 1)];
     }
-
 }
