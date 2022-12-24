@@ -3,8 +3,11 @@ package bot.tests;
 import bot.functions.Difficulty;
 import bot.functions.Task;
 import bot.functions.TaskGenerator;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 class TaskGeneratorTest {
@@ -41,44 +44,48 @@ class TaskGeneratorTest {
         Assertions.assertEquals(reducedDifficulty, Difficulty.HARD);
     }
 
-    @Test
+    @RepeatedTest(10)
     void testGetEasySimpleTask() {
         Difficulty difficulty = Difficulty.EASY;
         Task simpleTask = taskGenerator.getSimpleTask(difficulty);
-        int maxValue = 100;
-        int answer =  Integer.parseInt(simpleTask.getAnswer());
+        Expression expression = new ExpressionBuilder(simpleTask.getQuestion()).build();
+        int answer = (int) expression.evaluate();
+        int botAnswer = Integer.parseInt(simpleTask.getAnswer());
         Assertions.assertTrue(simpleTask.getDifficulty() == Difficulty.EASY &&
-                Math.abs(answer) <= maxValue && simpleTask.getQuestion() != null);
+                answer == botAnswer && simpleTask.getQuestion() != null);
     }
 
-    @Test
+    @RepeatedTest(10)
     void testGetMediumSimpleTask() {
         Difficulty difficulty = Difficulty.MEDIUM;
         Task simpleTask = taskGenerator.getSimpleTask(difficulty);
-        int maxValue = 10000;
-        int answer =  Integer.parseInt(simpleTask.getAnswer());
+        Expression expression = new ExpressionBuilder(simpleTask.getQuestion()).build();
+        int answer = (int) expression.evaluate();
+        int botAnswer = Integer.parseInt(simpleTask.getAnswer());
         Assertions.assertTrue(simpleTask.getDifficulty() == Difficulty.MEDIUM &&
-                Math.abs(answer) <= maxValue && simpleTask.getQuestion() != null);
+                answer == botAnswer && simpleTask.getQuestion() != null);
     }
 
-    @Test
+    @RepeatedTest(5)
     void testGetHardSimpleTask() {
         Difficulty difficulty = Difficulty.HARD;
         Task simpleTask = taskGenerator.getSimpleTask(difficulty);
-        int maxValue = 1000000;
-        int answer =  Integer.parseInt(simpleTask.getAnswer());
+        Expression expression = new ExpressionBuilder(simpleTask.getQuestion()).build();
+        int answer = (int) expression.evaluate();
+        int botAnswer = Integer.parseInt(simpleTask.getAnswer());
         Assertions.assertTrue(simpleTask.getDifficulty() == Difficulty.HARD &&
-                Math.abs(answer) <= maxValue && simpleTask.getQuestion() != null);
+                answer == botAnswer && simpleTask.getQuestion() != null);
     }
 
-    @Test
+    @RepeatedTest(5)
     void testGetExtremeSimpleTask() {
         Difficulty difficulty = Difficulty.EXTREME;
         Task simpleTask = taskGenerator.getSimpleTask(difficulty);
-        long maxValue = 1000000000000L;
-        long answer =  Long.parseLong(simpleTask.getAnswer());
+        Expression expression = new ExpressionBuilder(simpleTask.getQuestion()).build();
+        long answer = (long) expression.evaluate();
+        long botAnswer = Long.parseLong(simpleTask.getAnswer());
         Assertions.assertTrue(simpleTask.getDifficulty() == Difficulty.EXTREME &&
-                Math.abs(answer) <= maxValue && simpleTask.getQuestion() != null);
+                answer == botAnswer && simpleTask.getQuestion() != null);
     }
 
     @Test
